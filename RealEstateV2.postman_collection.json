@@ -1,0 +1,305 @@
+{
+	"info": {
+		"_postman_id": "9dba9354-cae8-48a0-a920-820ab9382e05",
+		"name": "RealEstateV2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "1.-crear admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"admin\",\r\n    \"avatar\":\"avatar\",\r\n    \"name\":\"emilio\",\r\n    \"lastname\":\"Férnandez\",\r\n    \"email\":\"admin@gmail.com\",\r\n    \"password\":\"admin\",\r\n    \"password2\":\"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/register/ADMIN",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register",
+								"ADMIN"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.-Login admin",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"admin@gmail.com\",\r\n    \"password\":\"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestor",
+			"item": [
+				{
+					"name": "1.-Crear gestor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxYWY3YWM1YS03ZDQ5LTE2YzItODE3ZC00OTA5MWMxODAwMDAiLCJpYXQiOjE2Mzc2OTQyNzYsIm5hbWUiOiJlbWlsaW8iLCJsYXN0bmFtZSI6IkbDqXJuYW5kZXoiLCJyb2xlIjoiQURNSU4ifQ.gWZB7DiHH3bIQ4WwpcscTMBzsRdfFl-hWaNYBFuBeMg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"gestor\",\r\n    \"avatar\":\"avatar\",\r\n    \"name\":\"Felix\",\r\n    \"lastname\":\"Segura\",\r\n    \"email\":\"gestor@gmail.com\",\r\n    \"password\":\"gestor\",\r\n    \"password2\":\"gestor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/register/GESTOR",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register",
+								"GESTOR"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.-Login gestor",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"gestor@gmail.com\",\r\n    \"password\":\"gestor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Propietario",
+			"item": [
+				{
+					"name": "1.-Crear propietario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"propietario\",\r\n    \"avatar\":\"avatar\",\r\n    \"name\":\"Mario\",\r\n    \"lastname\":\"Goméz\",\r\n    \"email\":\"propietario@gmail.com\",\r\n    \"password\":\"propietario\",\r\n    \"password2\":\"propietario\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/register/PROPIETARIO",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register",
+								"PROPIETARIO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.-Login propietario",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"propietario@gmail.com\",\r\n    \"password\":\"propietario\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.-Listar propietarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/propietario/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"propietario",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.-Propietario por id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxYWY3YWM1YS03ZDQ5LTFjNmItODE3ZC00OTVjODE3ZDAwMDAiLCJpYXQiOjE2Mzc2OTk3NDEsIm5hbWUiOiJNYXJpbyIsImxhc3RuYW1lIjoiR29tw6l6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.CSgJpWEo67UbF19AZGKyT9giBrI8Q4Y7iW41Bo2N9Ec",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/propietario/1af7ac5a-7d49-1c6b-817d-495c817d0000",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"propietario",
+								"1af7ac5a-7d49-1c6b-817d-495c817d0000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vivienda",
+			"item": [
+				{
+					"name": "1.- Crear vivienda",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxYWY3YWM1YS03ZDQ5LTE5YWItODE3ZC00OTZiMTczYzAwMDAiLCJpYXQiOjE2Mzc3MDA2OTcsIm5hbWUiOiJNYXJpbyIsImxhc3RuYW1lIjoiR29tw6l6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.q-pN1x6E5jgVll-Pf0nRSaYlzpnvnzjrV5wIU5bo6xA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"titulo\": \"hola\",\r\n  \"precio\": 5,\r\n  \"tipo\": \"CASA\",\r\n  \"descripcion\": \"string\",\r\n  \"direccion\":\"k\",\r\n  \"metrosCuadrados\": 5,\r\n  \"numHabitaciones\": 6,\r\n  \"numBanyos\": 2,\r\n  \"avatar\": \"string\",\r\n  \"latlng\": \"string\",\r\n  \"tienePiscina\": false,\r\n  \"tieneAscensor\": true,\r\n  \"tieneGaraje\": false,\r\n  \"intereses\": 10,\r\n  \"email\": \"hola\",\r\n  \"telefono\": \"12312412\",\r\n  \"poblacion\": \"sevilla\",\r\n  \"codigoPostal\": 48245,\r\n  \"provincia\": \"sevilla\",\r\n  \"estado\": \"COMPRA\",\r\n  \"propietarioId\":2,\r\n  \"inmobiliariaId\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/vivienda/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
