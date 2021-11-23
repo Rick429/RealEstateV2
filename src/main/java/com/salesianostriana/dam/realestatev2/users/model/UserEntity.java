@@ -63,19 +63,19 @@ public class UserEntity implements UserDetails {
     private List<Interesa> intereses = new ArrayList<>();
 
     @ManyToOne
-    private Inmobiliaria inmobiliarias;
+    private Inmobiliaria inmobiliaria;
 
 
     /*Helpers*/
 
     public void addGestorInmobiliaria (Inmobiliaria i) {
-        inmobiliarias = i;
+        inmobiliaria = i;
         i.getGestores().add(this);
     }
 
     public void removeGestorInmobiliaria (Inmobiliaria i) {
         i.getGestores().remove(this);
-        inmobiliarias = null;
+        inmobiliaria = null;
     }
 
     @Override

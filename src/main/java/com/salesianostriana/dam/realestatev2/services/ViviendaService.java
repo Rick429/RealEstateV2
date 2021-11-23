@@ -245,38 +245,6 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         return this.repositorio.findAll(todas, pageable);
     }
 
-    public ResponseEntity<GetViviendaDto> asignarInmobiliariaAVivienda(UUID id, UUID id2) {
-        if (this.findById(id).isEmpty() || inmobiliariaService.findById(id2).isEmpty()) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        } else {
-            Vivienda v = this.findById(id).get();
-            Inmobiliaria inmoAsignada = inmobiliariaService.findById(id2).get();
-            v.addToInmobiliaria(inmoAsignada);
-            this.save(v);
-            GetViviendaDto viviendaDto = this.findById(id).map(dtoConverter::viviendaToGetViviendaDto).get();
-            return ResponseEntity.ok().body(viviendaDto);
-        }
-
-    }
-
-    public ResponseEntity<?> eliminarInmobiliariaDeVivienda(UUID id, UUID id2) {
-        if (this.findById(id).isEmpty() || inmobiliariaService.findById(id2).isEmpty()) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        } else {
-            Vivienda v = this.findById(id).get();
-            Inmobiliaria inmoAsignada = inmobiliariaService.findById(id2).get();
-            v.removeFromInmobiliaria(inmoAsignada);
-            this.save(v);
-            return ResponseEntity
-                    .noContent()
-                    .build();
-        }
-    }
-
     public ResponseEntity <List<Interesa>> listInteresados(UUID id) {
         List<Interesa> intereses = this.findById(id).get().getIntereses();
         if(intereses.isEmpty()) {

@@ -3,13 +3,14 @@ package com.salesianostriana.dam.realestatev2.controllers;
 import com.salesianostriana.dam.realestatev2.dto.CreateViviendaDto;
 import com.salesianostriana.dam.realestatev2.dto.GetViviendaDto;
 import com.salesianostriana.dam.realestatev2.dto.ViviendaDtoConverter;
-import com.salesianostriana.dam.realestatev2.dto.editViviendaDto;
+import com.salesianostriana.dam.realestatev2.dto.EditViviendaDto;
 import com.salesianostriana.dam.realestatev2.models.*;
 import com.salesianostriana.dam.realestatev2.services.InmobiliariaService;
 import com.salesianostriana.dam.realestatev2.services.ViviendaService;
 import com.salesianostriana.dam.realestatev2.upload.PaginationLinksUtils;
 import com.salesianostriana.dam.realestatev2.users.dto.GetInteresadoDto;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
+import com.salesianostriana.dam.realestatev2.users.model.UserRole;
 import com.salesianostriana.dam.realestatev2.users.service.UserEntityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,10 +20,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.util.ArrayList;
@@ -30,7 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+@Log
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequiredArgsConstructor
@@ -160,29 +165,21 @@ public class ViviendaController {
                     content = @Content),
     })
     @PutMapping("/{id}")
-    public ResponseEntity<Vivienda> edit(@RequestBody editViviendaDto vivienda, @Parameter(description = "El ID de la vivienda que queremos editar") @PathVariable UUID id) {
-        return ResponseEntity.of(
-                service.findById(id).map(v -> {
-                    v.setTitulo(vivienda.getTitulo());
-                    v.setDescripcion(vivienda.getDescripcion());
-                    v.setAvatar(vivienda.getAvatar());
-                    v.setLatlng(vivienda.getLatlng());
-                    v.setDireccion(vivienda.getDireccion());
-                    v.setCodigoPostal(vivienda.getCodigoPostal());
-                    v.setPoblacion(vivienda.getPoblacion());
-                    v.setProvincia(vivienda.getProvincia());
-                    v.setTipo(vivienda.getTipo());
-                    v.setEstado(vivienda.getEstado());
-                    v.setPrecio(vivienda.getPrecio());
-                    v.setNumHabitaciones(vivienda.getNumHabitaciones());
-                    v.setNumBanyos(vivienda.getNumBanyos());
-                    v.setTienePiscina(vivienda.isTienePiscina());
-                    v.setTieneAscensor(vivienda.isTieneAscensor());
-                    v.setTieneGaraje(vivienda.isTieneGaraje());
-                    service.save(v);
-                    return v;
-                })
-        );
+    public ResponseEntity<EditViviendaDto> edit(@RequestBody EditViviendaDto vivienda, @Parameter(description = "El ID de la vivienda que queremos editar") @PathVariable UUID id,
+                                         @AuthenticationPrincipal UserEntity user) {
+        UserEntity userId = service.findById(id).get().getPropietario();
+       if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
+           Vivienda v = dtoConverter.editViviendaDtoToVivienda(vivienda);
+           service.save(v);
+           EditViviendaDto ev = dtoConverter.viviendaToEditViviendaDto(v);
+
+           return ResponseEntity.ok().body(ev);
+
+
+       }else {
+           return ResponseEntity.status(403).build();
+       }
+
     }
 
     @Operation(summary = "Borrar una vivienda")
@@ -196,87 +193,31 @@ public class ViviendaController {
                     content = @Content),
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@Parameter(description = "El id de la vivienda que queremos eliminar") @PathVariable UUID id) {
+    public ResponseEntity<?> deleteById(@Parameter(description = "El id de la vivienda que queremos eliminar") @PathVariable UUID id,
+                                        @AuthenticationPrincipal UserEntity user) {
+
         if (service.findById(id).isEmpty()) {
             return ResponseEntity
                     .notFound()
                     .build();
         } else {
-            Vivienda v=service.findById(id).get();
-            if(v.getInmobiliaria()!=null){
-                v.removeFromInmobiliaria(v.getInmobiliaria());
+            UserEntity userId = service.findById(id).get().getPropietario();
+            if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
+                Vivienda v=service.findById(id).get();
+                if(v.getInmobiliaria()!=null){
+                    v.removeFromInmobiliaria(v.getInmobiliaria());
+                }
+                v.removePropietario(v.getPropietario());
+                service.deleteById(id);
+                return ResponseEntity
+                        .noContent()
+                        .build();
+            }else {
+                return ResponseEntity
+                        .status(403)
+                        .build();
             }
-            v.removePropietario(v.getPropietario());
-            service.deleteById(id);
-            return ResponseEntity
-                    .noContent()
-                    .build();
-        }
-    }
 
-    /*
-    @Operation(summary = "Filtrar lista de viviendas por ciertos parámetros")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Se muestra la lista correctamente",
-                    content = { @Content(mediaType =  "aplication/json",
-                            schema = @Schema(implementation = Vivienda.class))}),
-            @ApiResponse(responseCode = "404",
-                    description = "La lista de viviendas esta vacia",
-                    content = @Content),
-    })
-    @GetMapping(value = "/", params = {"search"})
-    public ResponseEntity<List<?>> busquedaDeViviendas(@RequestParam("search") String search) {
-        ViviendaSpecificationBuilder builder = new ViviendaSpecificationBuilder();
-
-        // Validamos la cadena de búsqueda
-        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
-        Matcher matcher = pattern.matcher(search + ",");
-        while (matcher.find()) {
-            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-        }
-
-        Specification<Vivienda> spec = builder.build();
-        return buildResponseFromQuery(service.viviendasConSpecification(spec), dtoConverter::viviendaToGetViviendaDto);
-
-    }
-
-    private ResponseEntity<List<?>> buildResponseFromQuery(List<Vivienda> data, Function<Vivienda, GetViviendaDto> function) {
-        if (data.isEmpty())
-            return ResponseEntity.notFound().build();
-        else
-            return ResponseEntity.ok(data.stream()
-                    .map(function)
-                    .collect(Collectors.toList())
-            );
-
-    }
-*/
-
-    @Operation(summary = "Lista de las 10 viviedas con más intereses")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Se listan correctamente todas los viviendas",
-                    content = {@Content(mediaType = "aplication/json",
-                            schema = @Schema(implementation = UserEntity.class))}),
-            @ApiResponse(responseCode = "404",
-                    description = "La lista de viviendas está vacía",
-                    content = @Content),
-    })
-    @GetMapping("/top")
-    public ResponseEntity<List<GetViviendaDto>> findTop(){
-        List<Vivienda> topViviendas = service.top3Viviendas();
-
-        if(topViviendas.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        else {
-            List<GetViviendaDto> viviendasDTO = new ArrayList<>();
-            for (int i = 0; i<topViviendas.size(); i++) {
-                viviendasDTO.add(dtoConverter.viviendaToGetViviendaDtoAll(topViviendas.get(i)));
-            }
-            return ResponseEntity
-                    .ok().body(viviendasDTO);
         }
     }
 
@@ -291,8 +232,30 @@ public class ViviendaController {
                     content = @Content),
     })
     @PostMapping("/{id}/inmobiliaria/{id2}")
-    public ResponseEntity<GetViviendaDto> asignarInmobiliariaAVivienda(@Parameter(description = "El id de la vivienda a la que queremos añadirle una inmobiliaria ") @PathVariable UUID id, @Parameter(description = "El id de la inmobiliaria que añadiremos a una vivienda") @PathVariable UUID id2) {
-        return service.asignarInmobiliariaAVivienda(id, id2);
+    public ResponseEntity<GetViviendaDto> asignarInmobiliariaAVivienda(@Parameter(description = "El id de la vivienda a la que queremos añadirle una inmobiliaria ") @PathVariable UUID id,
+                                                                       @Parameter(description = "El id de la inmobiliaria que añadiremos a una vivienda") @PathVariable UUID id2,
+                                                                       @AuthenticationPrincipal UserEntity user) {
+            if (service.findById(id).isEmpty() || inmobiliariaService.findById(id2).isEmpty()) {
+                return ResponseEntity
+                        .notFound()
+                        .build();
+            } else {
+                UserEntity userId = service.findById(id).get().getPropietario();
+                if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
+                    Vivienda v = service.findById(id).get();
+                    Inmobiliaria inmoAsignada = inmobiliariaService.findById(id2).get();
+                    v.addToInmobiliaria(inmoAsignada);
+                    service.save(v);
+                    GetViviendaDto viviendaDto = service.findById(id).map(dtoConverter::viviendaToGetViviendaDto).get();
+                    return ResponseEntity.ok().body(viviendaDto);
+                }else {
+                    return ResponseEntity
+                            .status(403)
+                            .build();
+                }
+            }
+
+
     }
 
     @Operation(summary = "Borra una inmobiliaria de una vivienda")
@@ -306,8 +269,30 @@ public class ViviendaController {
                     content = @Content),
     })
     @DeleteMapping("/{id}/inmobiliaria/{id2}")
-    public ResponseEntity<?> eliminarInmobiliariaDeVivienda(@Parameter(description = "El id de la vivienda a la que queremos eliminarle una inmobiliaria ") @PathVariable UUID id, @Parameter(description = "El id de la inmobiliaria que eliminaremos de una vivienda") @PathVariable UUID id2) {
-        return service.eliminarInmobiliariaDeVivienda(id, id2);
+    public ResponseEntity<?> eliminarInmobiliariaDeVivienda(@Parameter(description = "El id de la vivienda a la que queremos eliminarle una inmobiliaria ") @PathVariable UUID id,
+                                                            @Parameter(description = "El id de la inmobiliaria que eliminaremos de una vivienda") @PathVariable UUID id2,
+                                                            @AuthenticationPrincipal UserEntity user) {
+            if (service.findById(id).isEmpty() || inmobiliariaService.findById(id2).isEmpty()) {
+                return ResponseEntity
+                        .notFound()
+                        .build();
+            } else {
+                UserEntity userId = service.findById(id).get().getPropietario();
+                Inmobiliaria inmoAsignada = inmobiliariaService.findById(id2).get();
+                if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)|| inmoAsignada.getGestores().contains(user)){
+                    Vivienda v = service.findById(id).get();
+                    v.removeFromInmobiliaria(inmoAsignada);
+                    service.save(v);
+                    return ResponseEntity
+                            .noContent()
+                            .build();
+                }else {
+                    return ResponseEntity
+                            .status(403)
+                            .build();
+                }
+            }
+
     }
 
     @Operation(summary = "Listar interesados por una vivienda")
@@ -369,6 +354,33 @@ public class ViviendaController {
     })
     public ResponseEntity<?> eliminarInteres(GetInteresadoDto id2, UUID id){
         return service.eliminarInteres(id, id2);
+    }
+
+    @Operation(summary = "Lista de las 10 viviedas con más intereses")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se listan correctamente todas los viviendas",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = UserEntity.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista de viviendas está vacía",
+                    content = @Content),
+    })
+    @GetMapping("/top")
+    public ResponseEntity<List<GetViviendaDto>> findTop(){
+        List<Vivienda> topViviendas = service.top3Viviendas();
+
+        if(topViviendas.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        else {
+            List<GetViviendaDto> viviendasDTO = new ArrayList<>();
+            for (int i = 0; i<topViviendas.size(); i++) {
+                viviendasDTO.add(dtoConverter.viviendaToGetViviendaDtoAll(topViviendas.get(i)));
+            }
+            return ResponseEntity
+                    .ok().body(viviendasDTO);
+        }
     }
 
 }
