@@ -25,6 +25,54 @@ public class ViviendaDtoConverter {
                 .build();
     }
 
+    public EditViviendaDto viviendaToEditViviendaDto(Vivienda v){
+        return  EditViviendaDto
+                .builder()
+                .id(v.getId())
+                .titulo(v.getTitulo())
+                .descripcion(v.getDescripcion())
+                .avatar(v.getAvatar())
+                .latlng(v.getLatlng())
+                .direccion(v.getDireccion())
+                .codigoPostal(v.getCodigoPostal())
+                .poblacion(v.getPoblacion())
+                .provincia(v.getProvincia())
+                .tipo(v.getTipo())
+                .estado(v.getEstado())
+                .precio(v.getPrecio())
+                .numHabitaciones(v.getNumHabitaciones())
+                .numBanyos(v.getNumBanyos())
+                .tienePiscina(v.isTienePiscina())
+                .tieneAscensor(v.isTieneAscensor())
+                .tieneGaraje(v.isTieneGaraje())
+                .metrosCuadrados(v.getMetrosCuadrados())
+                .build();
+    }
+
+    public Vivienda editViviendaDtoToVivienda(EditViviendaDto v){
+        return  Vivienda
+                .builder()
+                .id(v.getId())
+                .titulo(v.getTitulo())
+                .descripcion(v.getDescripcion())
+                .avatar(v.getAvatar())
+                .latlng(v.getLatlng())
+                .direccion(v.getDireccion())
+                .codigoPostal(v.getCodigoPostal())
+                .poblacion(v.getPoblacion())
+                .provincia(v.getProvincia())
+                .tipo(v.getTipo())
+                .estado(v.getEstado())
+                .precio(v.getPrecio())
+                .numHabitaciones(v.getNumHabitaciones())
+                .numBanyos(v.getNumBanyos())
+                .tienePiscina(v.isTienePiscina())
+                .tieneAscensor(v.isTieneAscensor())
+                .tieneGaraje(v.isTieneGaraje())
+                .metrosCuadrados(v.getMetrosCuadrados())
+                .build();
+    }
+
     public GetViviendaDto viviendaToGetViviendaDto(Vivienda v) {
         return GetViviendaDto
                 .builder()

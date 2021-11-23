@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class editViviendaDto {
+public class EditViviendaDto {
     private UUID id;
     private String titulo;
     private double precio;

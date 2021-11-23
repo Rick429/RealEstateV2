@@ -49,15 +49,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/propietario/**").anonymous()
-                .antMatchers(HttpMethod.DELETE, "/propietario/**").anonymous()
+                .antMatchers(HttpMethod.GET, "/propietario/").anonymous()
+                .antMatchers(HttpMethod.GET, "/propietario/**").hasAnyRole("PROPIETARIO", "ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/propietario/**").hasAnyRole("PROPIETARIO", "ADMIN")
                 .antMatchers(HttpMethod.POST, "/auth/register/ADMIN").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/auth/register/PROPIETARIO").anonymous()
                 .antMatchers(HttpMethod.POST, "/auth/register/GESTOR").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/auth/login").anonymous()
-                .antMatchers(HttpMethod.GET, "/vivienda/**").hasAnyRole("ADMIN", "PROPIETARIO", "GESTOR")
+                .antMatchers(HttpMethod.GET, "/vivienda/{id}").hasAnyRole("ADMIN", "PROPIETARIO", "GESTOR")
+                .antMatchers(HttpMethod.GET, "/vivienda/").anonymous()
                 .antMatchers(HttpMethod.POST, "/vivienda/**").hasRole("PROPIETARIO")
                 .antMatchers(HttpMethod.PUT, "/vivienda/**").hasAnyRole("PROPIETARIO", "ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/vivienda/{id}/inmobiliaria{id2}").hasAnyRole("PROPIETARIO", "GESTOR", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/inmobiliaria/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/inmobiliaria/{id}/gestor/").hasAnyRole("GESTOR", "ADMIN")
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated();
 

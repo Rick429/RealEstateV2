@@ -6,6 +6,7 @@ import com.salesianostriana.dam.realestatev2.models.Inmobiliaria;
 import com.salesianostriana.dam.realestatev2.services.InmobiliariaService;
 import com.salesianostriana.dam.realestatev2.upload.PaginationLinksUtils;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
+import com.salesianostriana.dam.realestatev2.users.model.UserRole;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
@@ -62,6 +64,33 @@ public class InmobiliariaController {
                     .body(service.save(nuevo));
         }
     }
+
+    @Operation(summary = "Obtener gestores de una inmobiliaria ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "2010",
+                    description = "Se devuelve una lista de gestores",
+                    content = { @Content(mediaType =  "aplication/json",
+                            schema = @Schema(implementation = Inmobiliaria.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No hay gestores",
+                    content = @Content),
+    })
+    @GetMapping("/inmobiliaria/{id}/gestor/")
+    public ResponseEntity<List<UserEntity>> obtenerGestores(@PathVariable UUID id, @AuthenticationPrincipal UserEntity user) {
+
+        Inmobiliaria i = service.findById(id).get();
+        if(i.getGestores().isEmpty()){
+            return ResponseEntity.notFound().build();
+        }else{
+        if(user.getInmobiliaria().getId().equals(i.getId())||user.getRole().equals(UserRole.ADMIN)){
+           return ResponseEntity.ok().body(i.getGestores());
+        }else{
+            return ResponseEntity.status(403).build();
+        }
+        }
+    }
+
+
 
 
     @Operation(summary = "Lista todos las inmobiliarias")

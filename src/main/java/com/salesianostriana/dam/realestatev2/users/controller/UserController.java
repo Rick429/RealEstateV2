@@ -16,21 +16,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -84,17 +76,14 @@ public class UserController {
                     content = @Content),
     })
     @GetMapping("/{id}")
-    public ResponseEntity<GetPropietarioDtoVi> findOne(@Parameter(description = "El ID del propietario que queremos consultar") @PathVariable UUID id) {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//            String name=auth.getName();
-//        if(name.equals(userEntityService.findById(id).get().getEmail())){
+    public ResponseEntity<GetPropietarioDtoVi> findOne(@Parameter(description = "El ID del propietario que queremos consultar") @PathVariable UUID id, @AuthenticationPrincipal UserEntity user) {
+       UserEntity usuarioId = userEntityService.findById(id).get();
+        if(user.getEmail().equals(usuarioId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
             return ResponseEntity
                     .of(userEntityService.findById(id).map(userDtoConverter::getPropietarioDatosVivienda));
-//        }else {
-//            return ResponseEntity
-//                    .status(403)
-//                    .build();
-//        }
+        }else{
+            return ResponseEntity.status(403).build();
+        }
 
     }
 
@@ -109,15 +98,15 @@ public class UserController {
                     content = @Content),
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@Parameter(description = "El id del propietario que queremos eliminar")@PathVariable UUID id){
-        if(userEntityService.findById(id).isEmpty()){
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }else {
+    public ResponseEntity<?> deleteById(@Parameter(description = "El id del propietario que queremos eliminar")@PathVariable UUID id,
+                                        @AuthenticationPrincipal UserEntity user){
+        UserEntity userId = userEntityService.findById(id).get();
+        if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
             userEntityService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }else {
             return ResponseEntity
-                    .noContent()
+                    .status(403)
                     .build();
         }
     }
