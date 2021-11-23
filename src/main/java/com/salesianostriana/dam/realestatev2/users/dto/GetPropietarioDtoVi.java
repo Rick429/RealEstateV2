@@ -1,7 +1,6 @@
 package com.salesianostriana.dam.realestatev2.users.dto;
 
 import com.salesianostriana.dam.realestatev2.dto.GetViviendaBasicaDto;
-import com.salesianostriana.dam.realestatev2.dto.GetViviendaDto;
 import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +11,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class GetPropietarioDto {
+public class GetPropietarioDtoVi{
     private UUID id;
     private String avatar, nombre, apellidos, direccion, email, telefono;
-    private int numeroViviendas;
-
+    private List<GetViviendaBasicaDto> listaViviendas = new ArrayList<>();
 }

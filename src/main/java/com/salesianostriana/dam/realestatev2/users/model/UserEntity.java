@@ -56,7 +56,6 @@ public class UserEntity implements UserDetails {
     private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();
     @OneToMany(mappedBy = "propietario", orphanRemoval = true)
     @Builder.Default
-    @JsonIgnore
     private List<Vivienda> viviendas = new ArrayList<>();
 
     @Builder.Default

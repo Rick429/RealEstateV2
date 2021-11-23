@@ -12,6 +12,19 @@ public class ViviendaDtoConverter {
 
     private final InteresaDtoConverter interesaDtoConverter;
 
+    public GetViviendaBasicaDto viviendaToGetViviendaBasicaDto(Vivienda v){
+        return  GetViviendaBasicaDto
+                .builder()
+                .id(v.getId())
+                .titulo(v.getTitulo())
+                .direccion(v.getDireccion())
+                .precio(v.getPrecio())
+                .tipo(v.getTipo())
+                .estado(v.getEstado())
+                .inmobiliaria(v.getInmobiliaria()==null?"Sin inmobiliaria":v.getInmobiliaria().getNombre())
+                .build();
+    }
+
     public GetViviendaDto viviendaToGetViviendaDto(Vivienda v) {
         return GetViviendaDto
                 .builder()
@@ -45,6 +58,7 @@ public class ViviendaDtoConverter {
                 .interes(v.getIntereses().stream().map(interesaDtoConverter::interesaToGetInteresaDto).collect(Collectors.toList()))
                 .build();
     }
+
 
     public GetViviendaDto viviendaToGetViviendaDtoAll(Vivienda v) {
         return GetViviendaDto

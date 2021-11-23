@@ -3,6 +3,7 @@ package com.salesianostriana.dam.realestatev2.users.controller;
 import com.salesianostriana.dam.realestatev2.models.Vivienda;
 import com.salesianostriana.dam.realestatev2.upload.PaginationLinksUtils;
 import com.salesianostriana.dam.realestatev2.users.dto.GetPropietarioDto;
+import com.salesianostriana.dam.realestatev2.users.dto.GetPropietarioDtoVi;
 import com.salesianostriana.dam.realestatev2.users.dto.UserDtoConverter;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import com.salesianostriana.dam.realestatev2.users.model.UserRole;
@@ -53,23 +54,22 @@ public class UserController {
                     content = @Content),
     })
     @GetMapping("/")
-    public ResponseEntity<List<GetPropietarioDto>> findAll(){
-        List<UserEntity> usuarios = userEntityService.findAll();
-        List<UserEntity> propietarios=new ArrayList<>();
-        if(usuarios.isEmpty()){
+    public ResponseEntity<List<GetPropietarioDto>> findAll() {
+        List<GetPropietarioDto> usuarios = userEntityService.findAll()
+                .stream().filter(usuario -> usuario.getRole().equals(UserRole.PROPIETARIO))
+                .map(userDtoConverter::propietarioToGetpropietarioDto)
+                .collect(Collectors.toList());
+
+        if (usuarios.isEmpty()) {
             return ResponseEntity
                     .notFound()
                     .build();
-        }else{
-            for (UserEntity e:usuarios) {
-                if(e.getRole().equals(UserRole.PROPIETARIO)){
-                    propietarios.add(e);
-                }
-            }
-            List<GetPropietarioDto> lisDto = propietarios.stream().map(userDtoConverter::propietarioToGetpropietarioDto).collect(Collectors.toList());
+        } else {
+
             return ResponseEntity
                     .ok()
-                    .body(lisDto);
+                    .body(usuarios);
+
         }
     }
 
@@ -84,18 +84,17 @@ public class UserController {
                     content = @Content),
     })
     @GetMapping("/{id}")
-    public ResponseEntity<GetPropietarioDto> findOne(@Parameter(description = "El ID del propietario que queremos consultar") @PathVariable UUID id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String name=auth.getName();
-        if(name.equals(userEntityService.findById(id).get().getEmail())){
+    public ResponseEntity<GetPropietarioDtoVi> findOne(@Parameter(description = "El ID del propietario que queremos consultar") @PathVariable UUID id) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            String name=auth.getName();
+//        if(name.equals(userEntityService.findById(id).get().getEmail())){
             return ResponseEntity
                     .of(userEntityService.findById(id).map(userDtoConverter::getPropietarioDatosVivienda));
-        }else {
-            return ResponseEntity
-                    .status(403)
-                    .build();
-        }
-
+//        }else {
+//            return ResponseEntity
+//                    .status(403)
+//                    .build();
+//        }
 
     }
 
@@ -134,19 +133,19 @@ public class UserController {
                     content = @Content),
     })
     @GetMapping("/top")
-    public ResponseEntity<List<GetPropietarioDto>> findTop(){
+    public ResponseEntity<List<GetPropietarioDtoVi>> findTop(){
         List<UserEntity> topPropietarios = userEntityService.topPropietarios();
 
         if(topPropietarios.isEmpty()){
             return ResponseEntity.notFound().build();
         }
         else {
-            List<GetPropietarioDto> propietariosDTO = new ArrayList<>();
+            List<GetPropietarioDtoVi> propietariosDTOVi = new ArrayList<>();
             for (int i = 0; i<topPropietarios.size(); i++) {
-                propietariosDTO.add(userDtoConverter.getPropietarioDatosVivienda(topPropietarios.get(i)));
+                propietariosDTOVi.add(userDtoConverter.getPropietarioDatosVivienda(topPropietarios.get(i)));
             }
             return ResponseEntity
-                    .ok().body(propietariosDTO);
+                    .ok().body(propietariosDTOVi);
         }
     }
 

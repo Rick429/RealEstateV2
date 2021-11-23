@@ -30,7 +30,6 @@ public class GetViviendaDto {
     private Estado estado;
     private String nombre, apellidos;
     private UUID propietarioId;
-    @Column(nullable = true)
     private UUID inmobiliariaId;
     private List<GetInteresaDto>interes;
 }

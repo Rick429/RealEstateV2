@@ -36,11 +36,12 @@ public class UserDtoConverter {
                 .direccion(p.getDireccion())
                 .email(p.getEmail())
                 .telefono(p.getTelefono())
+                .numeroViviendas(p.getViviendas().size())
                 .build();
     }
 
-    public GetPropietarioDto getPropietarioDatosVivienda(UserEntity p){
-        return GetPropietarioDto
+    public GetPropietarioDtoVi getPropietarioDatosVivienda(UserEntity p){
+        return GetPropietarioDtoVi
                 .builder()
                 .id(p.getId())
                 .avatar(p.getAvatar())
@@ -49,7 +50,7 @@ public class UserDtoConverter {
                 .direccion(p.getDireccion())
                 .email(p.getEmail())
                 .telefono(p.getTelefono())
-                .listaViviendas(p.getViviendas().stream().map(viviendaDtoConverter::viviendaToGetViviendaDtoAll).collect(Collectors.toList()))
+                .listaViviendas(p.getViviendas().stream().map(viviendaDtoConverter::viviendaToGetViviendaBasicaDto).collect(Collectors.toList()))
                 .build();
     }
 
