@@ -60,23 +60,11 @@ public class ViviendaController {
                     content = @Content),
     })
     @PostMapping("/")
-    public ResponseEntity<Vivienda> create(@RequestBody CreateViviendaDto viviendaNueva) {
-        if (viviendaNueva.getPropietarioId() == null) {
-            return ResponseEntity
-                    .badRequest()
-                    .build();
-        }
-        Vivienda v = dtoConverter.createViviendaDtoToVivienda(viviendaNueva);
-        UserEntity p = userEntityService.findById(viviendaNueva.getPropietarioId()).orElse(null);
-        Inmobiliaria i = inmobiliariaService.findById(viviendaNueva.getInmobiliariaId()).orElse(null);
-        userEntityService.save(p);
-        inmobiliariaService.save(i);
-        v.setPropietario(p);
-        v.setInmobiliaria(i);
-
+    public ResponseEntity<CreateViviendaDto> create(@AuthenticationPrincipal UserEntity user,@RequestBody CreateViviendaDto viviendaNueva) {
+        service.create(user, viviendaNueva);
         return ResponseEntity.
                 status(HttpStatus.CREATED)
-                .body(service.save(v));
+                .body(viviendaNueva);
     }
 
     @Operation(summary = "Obtener la lista de todas las viviendas")
@@ -172,10 +160,7 @@ public class ViviendaController {
            Vivienda v = dtoConverter.editViviendaDtoToVivienda(vivienda);
            service.save(v);
            EditViviendaDto ev = dtoConverter.viviendaToEditViviendaDto(v);
-
            return ResponseEntity.ok().body(ev);
-
-
        }else {
            return ResponseEntity.status(403).build();
        }
@@ -305,9 +290,18 @@ public class ViviendaController {
                     description = "No hay interesados",
                     content = @Content),
     })
-    @GetMapping("/interesado/{id}")
+    @GetMapping("/interesado/")
     public ResponseEntity <List<Interesa>> listInteresados(@Parameter(description = "El ID de la vivienda que queremos consultar") @PathVariable UUID id) {
-        return service.listInteresados(id);
+
+        List<Interesa> intereses = service.findById(id).get().getIntereses();
+        if(intereses.isEmpty()) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        } else {
+            return ResponseEntity
+                    .ok().body(intereses);
+        }
     }
 
     @Operation(summary = "Añadir un nuevo me interesa a una vivienda, creando un interesado al mismo tiempo")

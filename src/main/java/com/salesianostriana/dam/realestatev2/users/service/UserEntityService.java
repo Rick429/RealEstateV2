@@ -49,4 +49,6 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
     public List<UserEntity> topPropietarios() {
         return repositorio.topPropietarios();
     }
+
+    public List<UserEntity> findUserByRole(UserRole userRole) { return repositorio.findUserByRole(userRole);}
 }

@@ -29,7 +29,14 @@ public class InmobiliariaDtoConverter {
                 .nombre(i.getNombre())
                 .email(i.getEmail())
                 .telefono(i.getTelefono())
-                .listaViviendas(i.getViviendas().stream().map(viviendaDtoConverter::viviendaToGetViviendaDto).collect(Collectors.toList()))
+                .build();
+    }
+
+    public GetInmobiliariaIDDto inmobiliariaToGetInmobiliariaIDDto(Inmobiliaria i){
+        return GetInmobiliariaIDDto
+                .builder()
+                .inmobiliaria(i.getNombre())
+                .listaViviendas(i.getViviendas().stream().map(viviendaDtoConverter::viviendaToGetViviendaDatosDto).collect(Collectors.toList()))
                 .build();
     }
 }

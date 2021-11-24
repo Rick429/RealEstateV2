@@ -2,6 +2,7 @@ package com.salesianostriana.dam.realestatev2.users.repository;
 
 
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
+import com.salesianostriana.dam.realestatev2.users.model.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
@@ -23,5 +24,7 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, UUID> {
     public List<UserEntity> topPropietarios();
 
     Optional<UserEntity> findFirstByEmail(String email);
+
+    public List<UserEntity> findUserByRole(UserRole userRole);
 
 }

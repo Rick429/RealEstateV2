@@ -47,11 +47,13 @@ public class UserController {
     })
     @GetMapping("/")
     public ResponseEntity<List<GetPropietarioDto>> findAll() {
-        List<GetPropietarioDto> usuarios = userEntityService.findAll()
-                .stream().filter(usuario -> usuario.getRole().equals(UserRole.PROPIETARIO))
-                .map(userDtoConverter::propietarioToGetpropietarioDto)
-                .collect(Collectors.toList());
-
+//        List<GetPropietarioDto> usuarios = userEntityService.findAll()
+//                .stream().filter(usuario -> usuario.getRole().equals(UserRole.PROPIETARIO))
+//                .map(userDtoConverter::propietarioToGetpropietarioDto)
+//                .collect(Collectors.toList());
+        List<GetPropietarioDto> usuarios = userEntityService.findUserByRole(UserRole.PROPIETARIO)
+                                            .stream().map(userDtoConverter::propietarioToGetpropietarioDto)
+                                             .collect(Collectors.toList());
         if (usuarios.isEmpty()) {
             return ResponseEntity
                     .notFound()

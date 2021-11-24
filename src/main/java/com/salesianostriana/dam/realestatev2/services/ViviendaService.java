@@ -1,6 +1,6 @@
 package com.salesianostriana.dam.realestatev2.services;
 
-import com.salesianostriana.dam.realestatev2.dto.GetViviendaDto;
+import com.salesianostriana.dam.realestatev2.dto.CreateViviendaDto;
 import com.salesianostriana.dam.realestatev2.dto.ViviendaDtoConverter;
 import com.salesianostriana.dam.realestatev2.models.*;
 import com.salesianostriana.dam.realestatev2.repositories.ViviendaRepository;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -245,17 +246,6 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         return this.repositorio.findAll(todas, pageable);
     }
 
-    public ResponseEntity <List<Interesa>> listInteresados(UUID id) {
-        List<Interesa> intereses = this.findById(id).get().getIntereses();
-        if(intereses.isEmpty()) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        } else {
-            return ResponseEntity
-                    .ok().body(intereses);
-        }
-    }
 
     public ResponseEntity<UserEntity> createInteresaAndInteresado(GetInteresadoDto interesadoDTO, UUID id) {
         UserEntity interesado = userDtoConverter.getInteresadoDtoToInteresado(interesadoDTO);
@@ -285,5 +275,13 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Interesa i = interesaService.findOne(id, id2.getId());
         interesaService.delete(i);
         return ResponseEntity.noContent().build();
+    }
+
+    public Vivienda create(UserEntity user, CreateViviendaDto viviendaNueva) {
+        Vivienda v = dtoConverter.createViviendaDtoToVivienda(viviendaNueva);
+        v.setPropietario(user);
+
+        return this.save(v);
+
     }
 }

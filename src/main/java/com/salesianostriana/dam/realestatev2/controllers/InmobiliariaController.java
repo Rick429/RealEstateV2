@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.realestatev2.controllers;
 
 import com.salesianostriana.dam.realestatev2.dto.GetInmobiliariaDto;
+import com.salesianostriana.dam.realestatev2.dto.GetInmobiliariaIDDto;
 import com.salesianostriana.dam.realestatev2.dto.InmobiliariaDtoConverter;
 import com.salesianostriana.dam.realestatev2.models.Inmobiliaria;
 import com.salesianostriana.dam.realestatev2.services.InmobiliariaService;
@@ -131,9 +132,9 @@ public class InmobiliariaController {
                     content = @Content),
     })
     @GetMapping("/{id}")
-    public ResponseEntity<GetInmobiliariaDto> findOne(@Parameter(description = "El ID de la inmobiliaria que queremos consultar") @PathVariable UUID id) {
+    public ResponseEntity<GetInmobiliariaIDDto> findOne(@Parameter(description = "El ID de la inmobiliaria que queremos consultar") @PathVariable UUID id) {
         return ResponseEntity
-                .of(service.findById(id).map(dtoConverter::getInmobiliariaDatosVivienda));
+                .of(service.findById(id).map(dtoConverter::inmobiliariaToGetInmobiliariaIDDto));
     }
 
     @Operation(summary = "Se elimina una inmobiliaria")

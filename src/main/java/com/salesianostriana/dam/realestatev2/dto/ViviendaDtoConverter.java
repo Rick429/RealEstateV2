@@ -25,6 +25,19 @@ public class ViviendaDtoConverter {
                 .build();
     }
 
+    public GetViviendaDatosDto viviendaToGetViviendaDatosDto(Vivienda v){
+        return GetViviendaDatosDto.builder()
+                .id(v.getId())
+                .titulo(v.getTitulo())
+                .direccion(v.getDireccion())
+                .estado(v.getEstado())
+                .tipo(v.getTipo())
+                .precio(v.getPrecio())
+                .propietarioId(v.getPropietario().getId())
+                .build();
+
+    }
+
     public EditViviendaDto viviendaToEditViviendaDto(Vivienda v){
         return  EditViviendaDto
                 .builder()

@@ -264,7 +264,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmYTU5ZTE5OC00Yzc5LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc3NzU3NzUsIm5hbWUiOiJQYWJsbyIsImxhc3RuYW1lIjoiR2FyY2lhIE1hcnRpbmV6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.SNY_1DznzC0LaOx4KmzEmG2D-rrerSrzhBEUKVtr6nE",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4Mjk2NDMsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.H91P7ByjkrLEZftpKNqclmWyEEw18zwjmcJr3FaJIjA",
 									"type": "string"
 								}
 							]
@@ -272,14 +272,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/propietario/fa59e198-4c79-11ec-81d3-0242ac130003",
+							"raw": "localhost:8080/propietario/ac1b4618-7d50-1bf2-817d-511a4dd70000",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"propietario",
-								"fa59e198-4c79-11ec-81d3-0242ac130003"
+								"ac1b4618-7d50-1bf2-817d-511a4dd70000"
 							]
 						}
 					},
@@ -298,7 +298,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxYWY3YWM1YS03ZDQ5LTE5YWItODE3ZC00OTZiMTczYzAwMDAiLCJpYXQiOjE2Mzc3MDA2OTcsIm5hbWUiOiJNYXJpbyIsImxhc3RuYW1lIjoiR29tw6l6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.q-pN1x6E5jgVll-Pf0nRSaYlzpnvnzjrV5wIU5bo6xA",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNmQyMDdmNC00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4NDMxMTQsIm5hbWUiOiJQZWRybyIsImxhc3RuYW1lIjoiR2FyY2lhIE1hcnRpbmV6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.1WP3-dxopi4lFOc22NInkJHKsqPM4eFiVfU4Uf4OqOs",
 									"type": "string"
 								}
 							]
@@ -307,7 +307,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"titulo\": \"hola\",\r\n  \"precio\": 5,\r\n  \"tipo\": \"CASA\",\r\n  \"descripcion\": \"string\",\r\n  \"direccion\":\"k\",\r\n  \"metrosCuadrados\": 5,\r\n  \"numHabitaciones\": 6,\r\n  \"numBanyos\": 2,\r\n  \"avatar\": \"string\",\r\n  \"latlng\": \"string\",\r\n  \"tienePiscina\": false,\r\n  \"tieneAscensor\": true,\r\n  \"tieneGaraje\": false,\r\n  \"intereses\": 10,\r\n  \"email\": \"hola\",\r\n  \"telefono\": \"12312412\",\r\n  \"poblacion\": \"sevilla\",\r\n  \"codigoPostal\": 48245,\r\n  \"provincia\": \"sevilla\",\r\n  \"estado\": \"COMPRA\",\r\n  \"propietarioId\":2,\r\n  \"inmobiliariaId\":2\r\n}",
+							"raw": "{\r\n  \"titulo\": \"casa \",\r\n  \"descripcion\": \"descripcion de una casa\",\r\n  \"avatar\": \"avatarNuevaCasa.jpg\",\r\n  \"latlng\": \"825741, 872412\",\r\n  \"direccion\":\"condes de bustillo\",\r\n  \"precio\": 5,\r\n  \"tipo\": \"CASA\",\r\n  \"metrosCuadrados\": 5,\r\n  \"numHabitaciones\": 6,\r\n  \"numBanyos\": 2,\r\n  \"tienePiscina\": false,\r\n  \"tieneAscensor\": true,\r\n  \"tieneGaraje\": false,\r\n  \"poblacion\": \"sevilla\",\r\n  \"codigoPostal\": 48245,\r\n  \"provincia\": \"sevilla\",\r\n  \"estado\": \"COMPRA\",\r\n  \"propietarioId\":\"e6d207f4-4c56-11ec-81d3-0242ac130003\",\r\n  \"inmobiliariaId\":\"b53bc704-4c95-11ec-81d3-0242ac130003\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -451,7 +451,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNmQyMDdmNC00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc3ODQ4MDYsIm5hbWUiOiJQZWRybyIsImxhc3RuYW1lIjoiR2FyY2lhIE1hcnRpbmV6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.HaSphwdO1Hqdlk1J08f1kFFT_e2psXk90R6UHQBh6qw",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNmQyMDdmNC00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4MzI3MjcsIm5hbWUiOiJQZWRybyIsImxhc3RuYW1lIjoiR2FyY2lhIE1hcnRpbmV6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.ZOfbadn4mQvAsrr7r337Rw34H0qM43pgvl7DZPd0qD0",
 									"type": "string"
 								}
 							]
@@ -551,6 +551,9 @@
 				{
 					"name": "4.-Listar gestores de una inmobiliaria",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -564,6 +567,132 @@
 								"b53bc704-4c95-11ec-81d3-0242ac130003",
 								"gestor",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.-Obtener todas las inmobiliarias",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4MzE0ODMsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.xkc16FVq3NnqPc3kGIFuxmBj9VUJ5fwNj6XDDedoWuM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.-Inmobiliaria por id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4MzI2ODEsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.CfV9D_Q5YJjYEoBRJ3pl_ECsfAmo2H3uLdih2VRBw0w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								"b53bc704-4c95-11ec-81d3-0242ac130003"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.-Eliminar inmobiliaria",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4MzMyNDcsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.FSRLDKD1ijBM8hNSyuoP5IN5Qmzot9yxm36stB_x4JA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								"b53bc704-4c95-11ec-81d3-0242ac130003"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Interesa",
+			"item": [
+				{
+					"name": "3.-Listar interesados por una vivienda",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4MzM5NzcsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.73OEHBhKeKHZUmRRAqRPsPkXr4X84bXkqbX09WPwhak",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/vivienda/15ce6044-c541-1ec8-1d30-0242ac130003/interesado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								"15ce6044-c541-1ec8-1d30-0242ac130003",
+								"interesado"
 							]
 						}
 					},
