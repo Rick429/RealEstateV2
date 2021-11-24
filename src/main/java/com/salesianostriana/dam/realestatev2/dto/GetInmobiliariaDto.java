@@ -13,5 +13,5 @@ import java.util.UUID;
 public class GetInmobiliariaDto {
     private UUID id;
     private String nombre, email, telefono;
-    private int num_viviendas;
+    private int num_viviendas, num_gestores;
 }

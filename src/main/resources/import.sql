@@ -15,3 +15,5 @@ insert into vivienda (id, avatar, codigo_Postal, descripcion, direccion, estado,
 insert into vivienda (id, avatar, codigo_Postal, descripcion, direccion, estado, latlng, metros_Cuadrados, num_Banyos, num_Habitaciones, poblacion, precio, provincia, tiene_Ascensor, tiene_Garaje, tiene_Piscina, tipo, titulo, propietario_id) values ('83d20c004c5411ec81d30242ac130003', 'https://robohash.org/excepturicumqueid.png?size=50x50&set=set1', 44391, 'descripcion de una vivienda', '11442 Delladonna Place', 'COMPRA', '42.4385891 , -8.5995773', 322, 2, 2, 'Galicia', 361477, 'Pontevedra', false, false, true, 'PISO', 'Redhold', 'e6d207f44c5611ec81d30242ac130003');
 
 insert into inmobiliaria (id, nombre, email, telefono) values ('b53bc7044c9511ec81d30242ac130003', 'RealEstate', 'realstate@gmail.com', '456578451');
+
+insert into interesa (interesado_id, vivienda_id, created_date, mensaje) values ('e6d207f44c5611ec81d30242ac130003', '15ce6044c5411ec81d300242ac130003', CURRENT_TIMESTAMP, 'me gusta la vivienda');

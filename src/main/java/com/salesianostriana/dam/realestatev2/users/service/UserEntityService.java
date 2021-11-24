@@ -6,6 +6,8 @@ import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import com.salesianostriana.dam.realestatev2.users.model.UserRole;
 import com.salesianostriana.dam.realestatev2.users.repository.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,4 +53,6 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
     }
 
     public List<UserEntity> findUserByRole(UserRole userRole) { return repositorio.findUserByRole(userRole);}
+
+//    public UserEntity findGestor (UUID id) {return repositorio.findGestor(id);};
 }

@@ -54,17 +54,15 @@ public class UserController {
         List<GetPropietarioDto> usuarios = userEntityService.findUserByRole(UserRole.PROPIETARIO)
                                             .stream().map(userDtoConverter::propietarioToGetpropietarioDto)
                                              .collect(Collectors.toList());
-        if (usuarios.isEmpty()) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        } else {
-
-            return ResponseEntity
-                    .ok()
-                    .body(usuarios);
-
-        }
+                if (usuarios.isEmpty()) {
+                    return ResponseEntity
+                            .notFound()
+                            .build();
+                } else {
+                    return ResponseEntity
+                            .ok()
+                            .body(usuarios);
+                }
     }
 
     @Operation(summary = "Se busca un propietario por su ID")
@@ -73,8 +71,8 @@ public class UserController {
                     description = "Se ha encontrado el propietario con ese ID",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserEntity.class))}),
-            @ApiResponse(responseCode = "404",
-                    description = "No se encuentra el propietario con ese ID",
+            @ApiResponse(responseCode = "403",
+                    description = "No tiene permiso para realizar esta acción",
                     content = @Content),
     })
     @GetMapping("/{id}")
@@ -83,20 +81,19 @@ public class UserController {
         if(user.getEmail().equals(usuarioId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
             return ResponseEntity
                     .of(userEntityService.findById(id).map(userDtoConverter::getPropietarioDatosVivienda));
-        }else{
+        } else {
             return ResponseEntity.status(403).build();
         }
-
     }
 
     @Operation(summary = "Borrar un propietario por su id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204",
-                    description = "Se elimina correctamente de la lista",
+                    description = "Se elimina correctamente el propietario",
                     content = { @Content(mediaType =  "aplication/json",
                             schema = @Schema(implementation = UserEntity.class))}),
-            @ApiResponse(responseCode = "404",
-                    description = "No se encuentra propietario con ese id",
+            @ApiResponse(responseCode = "403",
+                    description = "No tiene permiso para realizar esta acción",
                     content = @Content),
     })
     @DeleteMapping("/{id}")

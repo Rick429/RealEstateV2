@@ -97,4 +97,13 @@ public class UserDtoConverter {
                 .avatar(i.getAvatar()).build();
     }
 
+    public UserEntity createUserDtoToUserEntity(CreateUserDto cu){
+        return UserEntity.builder()
+                .nombre(cu.getName())
+                .password(cu.getPassword())
+                .apellidos(cu.getLastname())
+                .email(cu.getEmail())
+                .build();
+    }
+
 }
