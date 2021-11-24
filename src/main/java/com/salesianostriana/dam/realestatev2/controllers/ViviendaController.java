@@ -315,23 +315,9 @@ public class ViviendaController {
                     content = @Content),
     })
     @PostMapping("/{id}/meinteresa")
-    public ResponseEntity<UserEntity> addInteresadoAndInteresa(@Parameter(description = "La dto del interesado a crear")@RequestBody GetInteresadoDto interesadoDTO, @Parameter(description = "El ID de la vivienda que queremos consultar") @PathVariable UUID id) {
-        return service.createInteresaAndInteresado(interesadoDTO, id);
-    }
-
-    @Operation(summary = "Añadir un nuevo me interesa a una vivienda, con un interesado ya existente")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",
-                    description = "Se crea correctamente el me interesa",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Vivienda.class))}),
-            @ApiResponse(responseCode = "404",
-                    description = "No existe la vivienda o el interesado a la que queremos añadir el interés",
-                    content = @Content),
-    })
-    @PostMapping("/{id}/meinteresa/{id2}")
-    public ResponseEntity<UserEntity> createInteresa(GetInteresadoDto interesadoDto, UUID id){
-        return service.createInteresa(interesadoDto, id);
+    public ResponseEntity<Interesa> addInteresadoAndInteresa(@AuthenticationPrincipal UserEntity user, @RequestBody String mensaje, @Parameter(description = "El ID de la vivienda que queremos consultar") @PathVariable UUID id) {
+        Interesa i = service.createInteresa(user, id,mensaje);
+        return ResponseEntity.ok().body(i);
     }
 
 

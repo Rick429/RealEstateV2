@@ -247,28 +247,14 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
     }
 
 
-    public ResponseEntity<UserEntity> createInteresaAndInteresado(GetInteresadoDto interesadoDTO, UUID id) {
-        UserEntity interesado = userDtoConverter.getInteresadoDtoToInteresado(interesadoDTO);
-        Interesa interesa = userDtoConverter.getMeInteresa(interesadoDTO);
-
-        userEntityService.save(interesado);
-        interesa.addToInteresado(interesado);
-        interesa.addToVivienda(this.findById(id).get());
-
+    public Interesa createInteresa(UserEntity user, UUID id, String mensaje){
+        Vivienda v = this.findById(id).get();
+        Interesa interesa= new Interesa();
+        interesa.addToInteresado(user);
+        interesa.addToVivienda(v);
+        interesaService.darMeInteresa(v, user, mensaje);
         interesaService.save(interesa);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(userEntityService.save(interesado));
-    }
-
-    public ResponseEntity<UserEntity> createInteresa(GetInteresadoDto interesadoDto, UUID id){
-        UserEntity interesado = userDtoConverter.getInteresadoDtoToInteresado(interesadoDto);
-        Interesa interesa = userDtoConverter.getMeInteresa(interesadoDto);
-        Vivienda vivienda = this.findById(id).get();
-        interesaService.darMeInteresa(vivienda, interesado, interesadoDto.getMensaje());
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userEntityService.save(interesado));
+        return interesa;
     }
 
     public ResponseEntity<?> eliminarInteres(UUID id, GetInteresadoDto id2){

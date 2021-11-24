@@ -697,6 +697,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "1.-Añadir Interes de usuario por una vivienda",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mensaje\": \"me gusta la casa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/vivienda/{id}/meinteresa",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								"{id}",
+								"meinteresa"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
