@@ -74,7 +74,7 @@ public class Vivienda implements Serializable {
     }
 
     @Builder.Default
-    @OneToMany(mappedBy = "vivienda")
+    @OneToMany(mappedBy = "vivienda", orphanRemoval = true)
     private List<Interesa> intereses = new ArrayList<>();
 
 

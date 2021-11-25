@@ -11,6 +11,16 @@
 				{
 					"name": "1.-crear admin",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -39,6 +49,18 @@
 				},
 				{
 					"name": "2.-Login admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"tokenAdmin\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -81,7 +103,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxYWY3YWM1YS03ZDQ5LTE2YzItODE3ZC00OTA5MWMxODAwMDAiLCJpYXQiOjE2Mzc2OTQyNzYsIm5hbWUiOiJlbWlsaW8iLCJsYXN0bmFtZSI6IkbDqXJuYW5kZXoiLCJyb2xlIjoiQURNSU4ifQ.gWZB7DiHH3bIQ4WwpcscTMBzsRdfFl-hWaNYBFuBeMg",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -114,6 +136,18 @@
 				},
 				{
 					"name": "2.-Login gestor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"tokenGestor\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -150,6 +184,17 @@
 			"item": [
 				{
 					"name": "1.-Crear propietario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -179,6 +224,18 @@
 				},
 				{
 					"name": "2.-Login propietario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"tokenPropietario\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -211,6 +268,16 @@
 				{
 					"name": "3.-Listar propietarios",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -235,7 +302,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc3NzM2MDksIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.zG8rTk53NdqnjYgpCne36povsnEUcun57Slu-sRns1I",
+									"value": "{{tokenPropietario}}",
 									"type": "string"
 								}
 							]
@@ -264,7 +331,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4Mjk2NDMsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.H91P7ByjkrLEZftpKNqclmWyEEw18zwjmcJr3FaJIjA",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -298,7 +365,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNmQyMDdmNC00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4Njk2NTMsIm5hbWUiOiJQZWRybyIsImxhc3RuYW1lIjoiR2FyY2lhIE1hcnRpbmV6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.okJTTpJp1sOYTceK2fIVvJhRuJVuK6pi8k-CoIloXuw",
+									"value": "{{tokenPropietario}}",
 									"type": "string"
 								}
 							]
@@ -331,6 +398,16 @@
 				{
 					"name": "2.-Listar todas las viviendas",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -355,7 +432,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmMDFlNjNhYy00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc3NzU5NjAsIm5hbWUiOiJDYXJsb3MiLCJsYXN0bmFtZSI6IkdhcmNpYSBNYXJ0aW5leiIsInJvbGUiOiJHRVNUT1IifQ.ezqlZgrD_ow1v0M21fN8ZNaQMj6SGCa_9Cg2ui4-Kaw",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -384,7 +461,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4Njk0NDIsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.M2BzZF3aUd0DOzUHEMEB78bwkV7mQh8mW8gPTSNchps",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -422,7 +499,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmMDFlNjNhYy00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc3ODA3MDMsIm5hbWUiOiJDYXJsb3MiLCJsYXN0bmFtZSI6IkdhcmNpYSBNYXJ0aW5leiIsInJvbGUiOiJHRVNUT1IifQ.rLAdQx4GXLoWn35c791N7OF9tm4R0GXlve2OZDLGkhI",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -451,7 +528,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNmQyMDdmNC00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc5MjI5MTcsIm5hbWUiOiJQZWRybyIsImxhc3RuYW1lIjoiR2FyY2lhIE1hcnRpbmV6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.OB2PMSQLXRSthxV9IXW0gbAqe71sGDFqWJC60KhgKpE",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -482,7 +559,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNmQyMDdmNC00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc3ODQ4MDYsIm5hbWUiOiJQZWRybyIsImxhc3RuYW1lIjoiR2FyY2lhIE1hcnRpbmV6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.HaSphwdO1Hqdlk1J08f1kFFT_e2psXk90R6UHQBh6qw",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -513,7 +590,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4NjcyNTQsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.BjFlw68jcf-pCHLRI2XEtCw24gXoxw7NnxxR4lAtbzg",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -548,7 +625,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc3ODU1ODAsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.YN_QCTU5GmAgtQU4hWYC1qwfw5i9dF8OPtClPSBV0zU",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -579,128 +656,6 @@
 					"response": []
 				},
 				{
-					"name": "4.-Listar gestores de una inmobiliaria",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc5MjY5NjAsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.Xb-w_cplHdeiUa4dJc_WC_RqFB0a6QLJO3h3u_TdPtM",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003/gestor/",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"inmobiliaria",
-								"b53bc704-4c95-11ec-81d3-0242ac130003",
-								"gestor",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "5.-Obtener todas las inmobiliarias",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4MzE0ODMsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.xkc16FVq3NnqPc3kGIFuxmBj9VUJ5fwNj6XDDedoWuM",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/inmobiliaria/",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"inmobiliaria",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "6.-Inmobiliaria por id",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4MzI2ODEsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.CfV9D_Q5YJjYEoBRJ3pl_ECsfAmo2H3uLdih2VRBw0w",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"inmobiliaria",
-								"b53bc704-4c95-11ec-81d3-0242ac130003"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "7.-Eliminar inmobiliaria",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4MzMyNDcsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.FSRLDKD1ijBM8hNSyuoP5IN5Qmzot9yxm36stB_x4JA",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"inmobiliaria",
-								"b53bc704-4c95-11ec-81d3-0242ac130003"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "2.-Agregar gestor a inmobiliaria",
 					"request": {
 						"auth": {
@@ -708,7 +663,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc5MjY5NjAsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.Xb-w_cplHdeiUa4dJc_WC_RqFB0a6QLJO3h3u_TdPtM",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -749,7 +704,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4NzA4NDIsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.8wobnyRz2vJhYC25hd0qlPWm3rnTO6IJuFXTyTv0T2U",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]
@@ -757,7 +712,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/inmobiliaria/gestor/ac1b46187d56177b817d56d789ab0000/",
+							"raw": "http://localhost:8080/inmobiliaria/gestor/1af7ac5a-7d57-11ca-817d-57c1ddee0000",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -766,8 +721,129 @@
 							"path": [
 								"inmobiliaria",
 								"gestor",
-								"ac1b46187d56177b817d56d789ab0000",
+								"1af7ac5a-7d57-11ca-817d-57c1ddee0000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.-Listar gestores de una inmobiliaria",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003/gestor/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								"b53bc704-4c95-11ec-81d3-0242ac130003",
+								"gestor",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.-Obtener todas las inmobiliarias",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.-Inmobiliaria por id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								"b53bc704-4c95-11ec-81d3-0242ac130003"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.-Eliminar inmobiliaria",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inmobiliaria",
+								"b53bc704-4c95-11ec-81d3-0242ac130003"
 							]
 						}
 					},
@@ -779,37 +855,6 @@
 			"name": "Interesa",
 			"item": [
 				{
-					"name": "3.-Listar interesados por una vivienda",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4NzIyNDksIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.IJGVpLYVWIiJP4gUomNcENNtbEFc9ArLQ1DQLPqKqw8",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/vivienda/15ce6044-c541-1ec8-1d30-0242ac130003/interesado",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"vivienda",
-								"15ce6044-c541-1ec8-1d30-0242ac130003",
-								"interesado"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "1.-Añadir Interes de usuario por una vivienda",
 					"request": {
 						"auth": {
@@ -817,7 +862,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNmQyMDdmNC00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4NDY0MDcsIm5hbWUiOiJQZWRybyIsImxhc3RuYW1lIjoiR2FyY2lhIE1hcnRpbmV6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.dwH5CQ66-H4_hLenYjF58cHBdfnxu_AE3PxSs62odyo",
+									"value": "{{tokenPropietario}}",
 									"type": "string"
 								}
 							]
@@ -851,6 +896,16 @@
 				{
 					"name": "2.-Eliminar interes de un usuario por una vivienda",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"body": {
@@ -878,8 +933,72 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "3.-Listar interesados por una vivienda",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/vivienda/interesado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vivienda",
+								"interesado"
+							]
+						}
+					},
+					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "tokenAdmin",
+			"value": ""
+		},
+		{
+			"key": "tokenPropietario",
+			"value": ""
 		}
 	]
 }

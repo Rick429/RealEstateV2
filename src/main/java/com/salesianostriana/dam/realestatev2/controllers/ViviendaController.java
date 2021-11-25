@@ -1,14 +1,14 @@
 package com.salesianostriana.dam.realestatev2.controllers;
 
-import com.salesianostriana.dam.realestatev2.dto.CreateViviendaDto;
-import com.salesianostriana.dam.realestatev2.dto.GetViviendaDto;
-import com.salesianostriana.dam.realestatev2.dto.ViviendaDtoConverter;
-import com.salesianostriana.dam.realestatev2.dto.EditViviendaDto;
+import com.salesianostriana.dam.realestatev2.dto.*;
 import com.salesianostriana.dam.realestatev2.models.*;
 import com.salesianostriana.dam.realestatev2.services.InmobiliariaService;
+import com.salesianostriana.dam.realestatev2.services.InteresaService;
 import com.salesianostriana.dam.realestatev2.services.ViviendaService;
 import com.salesianostriana.dam.realestatev2.upload.PaginationLinksUtils;
 import com.salesianostriana.dam.realestatev2.users.dto.GetInteresadoDto;
+import com.salesianostriana.dam.realestatev2.users.dto.GetUserDto;
+import com.salesianostriana.dam.realestatev2.users.dto.UserDtoConverter;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import com.salesianostriana.dam.realestatev2.users.model.UserRole;
 import com.salesianostriana.dam.realestatev2.users.service.UserEntityService;
@@ -45,9 +45,12 @@ public class ViviendaController {
 
     private final ViviendaService service;
     private final UserEntityService userEntityService;
+    private final UserDtoConverter userDtoConverter;
     private final ViviendaDtoConverter dtoConverter;
     private final InmobiliariaService inmobiliariaService;
     private final PaginationLinksUtils paginationLinksUtils;
+    private final InteresaService interesaService;
+    private final InteresaDtoConverter interesaDtoConverter;
 
     @Operation(summary = "Se añade una vivienda")
     @ApiResponses(value = {
@@ -101,8 +104,6 @@ public class ViviendaController {
                                                                          @RequestParam("tipo") Optional<Tipo> tipo,
                                                                          @RequestParam("estado") Optional<Estado> estado,
                                                                          Pageable pageable, HttpServletRequest request) {
-
-
         Page<Vivienda> resultado = service.findByArgs(titulo, provincia, direccion, poblacion, codigoPostal, numBanyos, numHabitaciones, metrosCuadrados, precio, tienePiscina, tieneAscensor, tieneGaraje, tipo, estado, pageable);
         if (resultado.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -193,7 +194,6 @@ public class ViviendaController {
                         .status(403)
                         .build();
             }
-
         }
     }
 
@@ -230,8 +230,6 @@ public class ViviendaController {
                             .build();
                 }
             }
-
-
     }
 
     @Operation(summary = "Borra una inmobiliaria de una vivienda")
@@ -269,10 +267,9 @@ public class ViviendaController {
                             .build();
                 }
             }
-
     }
 
-    @Operation(summary = "Listar interesados por una vivienda")
+    @Operation(summary = "Listar interesados por alguna vivienda")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se ha encontrado la lista de interesados",
@@ -283,20 +280,22 @@ public class ViviendaController {
                     content = @Content),
     })
     @GetMapping("/interesado/")
-    public ResponseEntity <List<Interesa>> listInteresados(@Parameter(description = "El ID de la vivienda que queremos consultar") @PathVariable UUID id) {
+    public ResponseEntity <List<GetUserDto>> listInteresados() {
 
-        List<Interesa> intereses = service.findById(id).get().getIntereses();
-        if(intereses.isEmpty()) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        } else {
-            return ResponseEntity
-                    .ok().body(intereses);
+        List<UserEntity> intereses = userEntityService.findAll();
+        List<UserEntity> interesados = new ArrayList<>();
+
+        for (UserEntity interesado:intereses) {
+            if(!interesado.getIntereses().isEmpty())
+            interesados.add(interesado);
         }
+        return ResponseEntity
+                    .ok().body(interesados.stream()
+                            .map(userDtoConverter::convertUserEntityToGetUserDto)
+                            .collect(Collectors.toList()));
     }
 
-    @Operation(summary = "Añadir un nuevo me interesa a una vivienda, creando un interesado al mismo tiempo")
+    @Operation(summary = "Añadir un nuevo me interesa a una vivienda")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
                     description = "Se crea correctamente el me interesa",
@@ -307,12 +306,19 @@ public class ViviendaController {
                     content = @Content),
     })
     @PostMapping("/{id}/meinteresa")
-    public ResponseEntity<Interesa> addInteresadoAndInteresa(@AuthenticationPrincipal UserEntity user, @RequestBody String mensaje, @Parameter(description = "El ID de la vivienda que queremos consultar") @PathVariable UUID id) {
-        Interesa i = service.createInteresa(user, id,mensaje);
-        return ResponseEntity.ok().body(i);
+    public ResponseEntity<GetInteresaDto> addInteresadoAndInteresa(@AuthenticationPrincipal UserEntity user, @RequestBody String mensaje, @Parameter(description = "El ID de la vivienda que queremos consultar") @PathVariable UUID id) {
+        Vivienda v = service.findById(id).get();
+        Interesa interes = Interesa.builder()
+                .interesado(user)
+                .vivienda(v)
+                .mensaje(mensaje)
+                .build();
+        interes.addToInteresado(user);
+        interes.addToVivienda(v);
+        interesaService.save(interes);
+
+        return ResponseEntity.ok().body(interesaDtoConverter.interesaToGetInteresaDto(interes));
     }
-
-
 
     @Operation(summary = "Eliminar el interés de un interesado por una vivienda")
     @ApiResponses(value = {

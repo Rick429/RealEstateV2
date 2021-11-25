@@ -31,6 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -54,22 +55,26 @@ public class InmobiliariaController {
                     content = { @Content(mediaType =  "aplication/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),
             @ApiResponse(responseCode = "400",
-                    description = "No se pudo crear la inmobiliaria",
+                    description = "Hay un error en los datos",
+                    content = @Content),
+            @ApiResponse(responseCode = "400",
+                    description = "No tiene permisos para realizar esta acción",
                     content = @Content),
     })
     @PostMapping("/")
-    public ResponseEntity<Inmobiliaria> create(@RequestBody Inmobiliaria nuevo) {
+    public ResponseEntity<Inmobiliaria> create(@AuthenticationPrincipal UserEntity user, @RequestBody Inmobiliaria nuevo) {
 
-        // Comprobamos si el nombre de la inmobiliaria está vacío para devolver un error
+        if(user.getRole().equals(UserRole.ADMIN)){
         if(nuevo.getNombre().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-
-        // Si lleva contenido lo añadimos y devolvemos un código 201 CREATE
         else {
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(service.save(nuevo));
+        }
+        }else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
@@ -79,6 +84,9 @@ public class InmobiliariaController {
                     description = "Se crea un gestor y se le asigna a la inmobiliaria",
                     content = { @Content(mediaType =  "aplication/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Hay un error en los datos",
+                    content = @Content),
             @ApiResponse(responseCode = "403",
                     description = "No tiene permiso para realizar esta acción",
                     content = @Content),
@@ -87,30 +95,49 @@ public class InmobiliariaController {
     public ResponseEntity<CreateUserDto> crearGestor(@AuthenticationPrincipal UserEntity user,
                                                      @PathVariable UUID id, @RequestBody CreateUserDto nuevoGestor) {
         Inmobiliaria i = service.findById(id).get();
-       if(/*user.getInmobiliaria().equals(i.getId())||*/ user.getRole().equals(UserRole.ADMIN)){
-
+       if(user.getRole().equals(UserRole.GESTOR)&&user.getInmobiliaria().equals(i.getId()) || user.getRole().equals(UserRole.ADMIN)){
+           if(nuevoGestor.getEmail().isEmpty()) {
+               return ResponseEntity.badRequest().build();
+           }
+           else {
            UserEntity saved = userEntityService.saveGestor(nuevoGestor,i);
            saved.addGestorInmobiliaria(i);
            service.edit(i);
            return ResponseEntity.ok().body(nuevoGestor);
-
+           }
        } else {
            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
        }
 
     }
 
+    @Operation(summary = "Eliminar gestor de una inmobiliaria ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Se elimina el gestor correctamente",
+                    content = { @Content(mediaType =  "aplication/json",
+                            schema = @Schema(implementation = Inmobiliaria.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No existe un gestor con ese id",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No tiene permiso para realizar esta acción",
+                    content = @Content),
+    })
     @DeleteMapping("/gestor/{id}")
     public ResponseEntity<Inmobiliaria> deleteGestor(@AuthenticationPrincipal UserEntity user,
                                                      @PathVariable UUID id) {
-        UUID idInmo = user.getInmobiliaria().getId();
-        UserEntity u = userEntityService.findById(id).get();
-        Inmobiliaria in = u.getInmobiliaria();
-        if(/*idInmo.equals(in.getId())||*/ user.getRole().equals(UserRole.ADMIN)){
-            u.removeGestorInmobiliaria(in);
-            userEntityService.save(u);
+        Inmobiliaria inmoLog = user.getInmobiliaria();
+        Optional<UserEntity> u = userEntityService.findById(id);
+        if(u.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        Inmobiliaria in = u.get().getInmobiliaria();
+        if(user.getRole().equals(UserRole.GESTOR)&&inmoLog.getId().equals(in.getId()) || user.getRole().equals(UserRole.ADMIN)){
+            u.get().removeGestorInmobiliaria(in);
+            service.edit(in);
+            userEntityService.delete(u.get());
             return ResponseEntity.noContent().build();
-
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -136,7 +163,7 @@ public class InmobiliariaController {
         if(i.getGestores().isEmpty()){
             return ResponseEntity.notFound().build();
         }else{
-        if(/*user.getInmobiliaria().getId().equals(i.getId())||*/user.getRole().equals(UserRole.ADMIN)){
+        if(user.getRole().equals(UserRole.GESTOR)&&user.getInmobiliaria().getId().equals(i.getId())||user.getRole().equals(UserRole.ADMIN)){
            return ResponseEntity.ok().body(i.getGestores().stream().map(userDtoConverter::convertUserEntityToGetUserDto).collect(Collectors.toList()));
         }else{
             return ResponseEntity.status(403).build();

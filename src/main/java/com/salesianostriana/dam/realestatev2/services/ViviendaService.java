@@ -249,12 +249,15 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
 
     public Interesa createInteresa(UserEntity user, UUID id, String mensaje){
         Vivienda v = this.findById(id).get();
-        Interesa interesa= new Interesa();
-        interesa.addToInteresado(user);
-        interesa.addToVivienda(v);
-        interesaService.darMeInteresa(v, user, mensaje);
-        interesaService.save(interesa);
-        return interesa;
+        Interesa interes = Interesa.builder()
+                .interesado(user)
+                .vivienda(v)
+                .mensaje(mensaje)
+                .build();
+        interes.addToInteresado(user);
+        interes.addToVivienda(v);
+        interesaService.save(interes);
+        return interes;
     }
 
     public ResponseEntity<?> eliminarInteres(UUID id, UserEntity user){
@@ -266,8 +269,6 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
     public Vivienda create(UserEntity user, CreateViviendaDto viviendaNueva) {
         Vivienda v = dtoConverter.createViviendaDtoToVivienda(viviendaNueva);
         v.setPropietario(user);
-
         return this.save(v);
-
     }
 }

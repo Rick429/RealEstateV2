@@ -18,6 +18,7 @@ public class UserDtoConverter {
     public GetUserDto convertUserEntityToGetUserDto(UserEntity user) {
         return GetUserDto.builder()
                 .avatar(user.getAvatar())
+                .id(user.getId())
                 .name(user.getNombre())
                 .lastname(user.getApellidos())
                 .email(user.getEmail())

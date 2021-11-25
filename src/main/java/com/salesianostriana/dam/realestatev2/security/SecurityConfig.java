@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth/register/GESTOR").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/auth/login").anonymous()
                 .antMatchers(HttpMethod.GET, "/vivienda/{id}").hasAnyRole("ADMIN", "PROPIETARIO", "GESTOR")
-                .antMatchers(HttpMethod.GET, "/vivienda/").anonymous()
+                .antMatchers(HttpMethod.GET, "/vivienda/").hasAnyRole("ADMIN", "PROPIETARIO", "GESTOR")
                 .antMatchers(HttpMethod.POST, "/vivienda/**").hasRole("PROPIETARIO")
                 .antMatchers(HttpMethod.PUT, "/vivienda/**").hasAnyRole("PROPIETARIO", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/vivienda/{id}/inmobiliaria{id2}").hasAnyRole("PROPIETARIO", "GESTOR", "ADMIN")
@@ -66,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/inmobiliaria/").hasAnyRole("PROPIETARIO", "GESTOR", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/inmobiliaria/{id}").hasAnyRole("PROPIETARIO", "GESTOR", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/inmobiliaria/{id}").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/vivienda/{id}/interesado/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/vivienda/interesado/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST,"/vivienda/{id}/meinteresa").hasRole("PROPIETARIO")
                 .antMatchers(HttpMethod.POST, "/inmobiliaria/{id}/gestor/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/vivienda/top").hasAnyRole("PROPIETARIO", "GESTOR", "ADMIN")
@@ -78,8 +78,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Para dar acceso a h2
         http.headers().frameOptions().disable();
-
-
     }
 
     @Bean
