@@ -7,6 +7,8 @@ import com.salesianostriana.dam.realestatev2.models.Inmobiliaria;
 import com.salesianostriana.dam.realestatev2.services.InmobiliariaService;
 import com.salesianostriana.dam.realestatev2.upload.PaginationLinksUtils;
 import com.salesianostriana.dam.realestatev2.users.dto.CreateUserDto;
+import com.salesianostriana.dam.realestatev2.users.dto.GetUserDto;
+import com.salesianostriana.dam.realestatev2.users.dto.UserDtoConverter;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import com.salesianostriana.dam.realestatev2.users.model.UserRole;
 import com.salesianostriana.dam.realestatev2.users.service.UserEntityService;
@@ -30,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -40,6 +43,7 @@ public class InmobiliariaController {
 
     private final InmobiliariaService service;
     private final InmobiliariaDtoConverter dtoConverter;
+    private final UserDtoConverter userDtoConverter;
     private final UserEntityService userEntityService;
     private final PaginationLinksUtils paginationLinksUtils;
 
@@ -79,29 +83,30 @@ public class InmobiliariaController {
                     description = "No tiene permiso para realizar esta acción",
                     content = @Content),
     })
-    @PostMapping("/inmobiliaria/{id}/gestor/")
+    @PostMapping("/{id}/gestor/")
     public ResponseEntity<CreateUserDto> crearGestor(@AuthenticationPrincipal UserEntity user,
                                                      @PathVariable UUID id, @RequestBody CreateUserDto nuevoGestor) {
-       if(/*userEntityService.findGestor(id)!=null ||*/ user.getRole().equals(UserRole.ADMIN)){
-           Inmobiliaria i = service.findById(id).get();
-           UserEntity saved = userEntityService.save(nuevoGestor, UserRole.GESTOR);
+        Inmobiliaria i = service.findById(id).get();
+       if(/*user.getInmobiliaria().equals(i.getId())||*/ user.getRole().equals(UserRole.ADMIN)){
 
-           i.getGestores().add(saved);
-
+           UserEntity saved = userEntityService.saveGestor(nuevoGestor,i);
+           saved.addGestorInmobiliaria(i);
            service.edit(i);
            return ResponseEntity.ok().body(nuevoGestor);
 
        } else {
            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
        }
+
     }
 
-    @DeleteMapping("/inmobiliaria/gestor/{id}")
+    @DeleteMapping("/gestor/{id}")
     public ResponseEntity<Inmobiliaria> deleteGestor(@AuthenticationPrincipal UserEntity user,
                                                      @PathVariable UUID id) {
-        if(/*userEntityService.findGestor(id)!=null ||*/ user.getRole().equals(UserRole.ADMIN)){
-            UserEntity u = userEntityService.findById(id).get();
-            Inmobiliaria in = u.getInmobiliaria();
+        UUID idInmo = user.getInmobiliaria().getId();
+        UserEntity u = userEntityService.findById(id).get();
+        Inmobiliaria in = u.getInmobiliaria();
+        if(/*idInmo.equals(in.getId())||*/ user.getRole().equals(UserRole.ADMIN)){
             u.removeGestorInmobiliaria(in);
             userEntityService.save(u);
             return ResponseEntity.noContent().build();
@@ -124,15 +129,15 @@ public class InmobiliariaController {
                     description = "No hay gestores",
                     content = @Content),
     })
-    @GetMapping("/inmobiliaria/{id}/gestor/")
-    public ResponseEntity<List<UserEntity>> obtenerGestores(@PathVariable UUID id, @AuthenticationPrincipal UserEntity user) {
+    @GetMapping("/{id}/gestor/")
+    public ResponseEntity<List<GetUserDto>> obtenerGestores(@PathVariable UUID id, @AuthenticationPrincipal UserEntity user) {
 
         Inmobiliaria i = service.findById(id).get();
         if(i.getGestores().isEmpty()){
             return ResponseEntity.notFound().build();
         }else{
-        if(user.getInmobiliaria().getId().equals(i.getId())||user.getRole().equals(UserRole.ADMIN)){
-           return ResponseEntity.ok().body(i.getGestores());
+        if(/*user.getInmobiliaria().getId().equals(i.getId())||*/user.getRole().equals(UserRole.ADMIN)){
+           return ResponseEntity.ok().body(i.getGestores().stream().map(userDtoConverter::convertUserEntityToGetUserDto).collect(Collectors.toList()));
         }else{
             return ResponseEntity.status(403).build();
         }

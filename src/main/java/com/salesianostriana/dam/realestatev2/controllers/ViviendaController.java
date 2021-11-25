@@ -244,18 +244,19 @@ public class ViviendaController {
                     description = "No existe la inmobiliaria dentro de la vivienda",
                     content = @Content),
     })
-    @DeleteMapping("/{id}/inmobiliaria/{id2}")
+    @DeleteMapping("/{id}/inmobiliaria/")
     public ResponseEntity<?> eliminarInmobiliariaDeVivienda(@Parameter(description = "El id de la vivienda a la que queremos eliminarle una inmobiliaria ") @PathVariable UUID id,
-                                                            @Parameter(description = "El id de la inmobiliaria que eliminaremos de una vivienda") @PathVariable UUID id2,
                                                             @AuthenticationPrincipal UserEntity user) {
-            if (service.findById(id).isEmpty() || inmobiliariaService.findById(id2).isEmpty()) {
+        Inmobiliaria i = service.findById(id).get().getInmobiliaria();
+            if (service.findById(id).isEmpty() || inmobiliariaService.findById(i.getId()).isEmpty()) {
                 return ResponseEntity
                         .notFound()
                         .build();
             } else {
                 UserEntity userId = service.findById(id).get().getPropietario();
-                Inmobiliaria inmoAsignada = inmobiliariaService.findById(id2).get();
-                if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)|| inmoAsignada.getGestores().contains(user)){
+                Inmobiliaria inmoAsignada = inmobiliariaService.findById(i.getId()).get();
+                if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)||
+                        inmoAsignada.getGestores().contains(user)|| user.getRole().equals(UserRole.PROPIETARIO)){
                     Vivienda v = service.findById(id).get();
                     v.removeFromInmobiliaria(inmoAsignada);
                     service.save(v);

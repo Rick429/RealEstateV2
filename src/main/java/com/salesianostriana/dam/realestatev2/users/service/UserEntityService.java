@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.realestatev2.users.service;
 
+import com.salesianostriana.dam.realestatev2.models.Inmobiliaria;
 import com.salesianostriana.dam.realestatev2.services.base.BaseService;
 import com.salesianostriana.dam.realestatev2.users.dto.CreateUserDto;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
@@ -46,6 +47,24 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
             return null;
         }
     }
+
+    public UserEntity saveGestor(CreateUserDto newUser, Inmobiliaria i) {
+        if (newUser.getPassword().contentEquals(newUser.getPassword2())) {
+            UserEntity userEntity = UserEntity.builder()
+                    .password(passwordEncoder.encode(newUser.getPassword()))
+                    .avatar(newUser.getAvatar())
+                    .nombre(newUser.getName())
+                    .apellidos(newUser.getLastname())
+                    .email(newUser.getEmail())
+                    .role(UserRole.GESTOR)
+                    .inmobiliaria(i)
+                    .build();
+            return save(userEntity);
+        } else {
+            return null;
+        }
+    }
+
 
 
     public List<UserEntity> topPropietarios() {

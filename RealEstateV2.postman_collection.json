@@ -451,7 +451,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNmQyMDdmNC00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4MzI3MjcsIm5hbWUiOiJQZWRybyIsImxhc3RuYW1lIjoiR2FyY2lhIE1hcnRpbmV6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.ZOfbadn4mQvAsrr7r337Rw34H0qM43pgvl7DZPd0qD0",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNmQyMDdmNC00YzU2LTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc5MjI5MTcsIm5hbWUiOiJQZWRybyIsImxhc3RuYW1lIjoiR2FyY2lhIE1hcnRpbmV6Iiwicm9sZSI6IlBST1BJRVRBUklPIn0.OB2PMSQLXRSthxV9IXW0gbAqe71sGDFqWJC60KhgKpE",
 									"type": "string"
 								}
 							]
@@ -490,7 +490,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/vivienda/15ce6044-c541-1ec8-1d30-0242ac130003/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003",
+							"raw": "localhost:8080/vivienda/15ce6044-c541-1ec8-1d30-0242ac130003/inmobiliaria/",
 							"host": [
 								"localhost"
 							],
@@ -499,7 +499,7 @@
 								"vivienda",
 								"15ce6044-c541-1ec8-1d30-0242ac130003",
 								"inmobiliaria",
-								"b53bc704-4c95-11ec-81d3-0242ac130003"
+								""
 							]
 						}
 					},
@@ -586,7 +586,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4NzI3NDEsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.lWoh2Kvzvv59EPjE0b3BoRHNSTeGziKFB83XjT_fJK0",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc5MjY5NjAsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.Xb-w_cplHdeiUa4dJc_WC_RqFB0a6QLJO3h3u_TdPtM",
 									"type": "string"
 								}
 							]
@@ -708,7 +708,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc4NjgzMDksIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.Hct5W1nlzvKmIvG3m-N81cnFNgwg5RvfBV6eVyzyep8",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzZDFjMjVmZS00YzUyLTExZWMtODFkMy0wMjQyYWMxMzAwMDMiLCJpYXQiOjE2Mzc5MjY5NjAsIm5hbWUiOiJFZHVhcmRvIiwibGFzdG5hbWUiOiJHYXJjaWEgTWFydGluZXoiLCJyb2xlIjoiQURNSU4ifQ.Xb-w_cplHdeiUa4dJc_WC_RqFB0a6QLJO3h3u_TdPtM",
 									"type": "string"
 								}
 							]
@@ -717,7 +717,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"gestor\",\r\n    \"avatar\":\"avatar\",\r\n    \"name\":\"Felix\",\r\n    \"lastname\":\"Segura\",\r\n    \"email\":\"gestor1@gmail.com\",\r\n    \"password\":\"gestor\",\r\n    \"password2\":\"gestor\"\r\n}",
+							"raw": "{\r\n    \"username\":\"gestordos\",\r\n    \"avatar\":\"avatardos\",\r\n    \"name\":\"Felix\",\r\n    \"lastname\":\"Segura\",\r\n    \"email\":\"gestornuevo@gmail.com\",\r\n    \"password\":\"gestor\",\r\n    \"password2\":\"gestor\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -725,7 +725,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003/gestor",
+							"raw": "http://localhost:8080/inmobiliaria/b53bc704-4c95-11ec-81d3-0242ac130003/gestor/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -734,7 +734,8 @@
 							"path": [
 								"inmobiliaria",
 								"b53bc704-4c95-11ec-81d3-0242ac130003",
-								"gestor"
+								"gestor",
+								""
 							]
 						}
 					},
@@ -756,7 +757,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/inmobiliaria/gestor/e6d207f44c5611ec81d30242ac130003",
+							"raw": "http://localhost:8080/inmobiliaria/gestor/ac1b46187d56177b817d56d789ab0000/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -765,7 +766,8 @@
 							"path": [
 								"inmobiliaria",
 								"gestor",
-								"e6d207f44c5611ec81d30242ac130003"
+								"ac1b46187d56177b817d56d789ab0000",
+								""
 							]
 						}
 					},
