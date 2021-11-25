@@ -29,7 +29,7 @@ Para este proyecto hemos instalado las siguientes dependencias:
 - Spring Web
 - Spring Security
 
-## Componentes
+## Desarrollador
 
 Este proyecto ha sido realizado por:
 
