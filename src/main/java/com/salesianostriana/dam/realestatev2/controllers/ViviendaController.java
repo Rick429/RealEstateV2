@@ -306,7 +306,7 @@ public class ViviendaController {
                     content = @Content),
     })
     @PostMapping("/{id}/meinteresa")
-    public ResponseEntity<GetInteresaDto> addInteresadoAndInteresa(@AuthenticationPrincipal UserEntity user, @RequestBody String mensaje, @Parameter(description = "El ID de la vivienda que queremos consultar") @PathVariable UUID id) {
+    public ResponseEntity<Vivienda> addInteresadoAndInteresa(@AuthenticationPrincipal UserEntity user, @RequestBody String mensaje, @Parameter(description = "El ID de la vivienda que queremos consultar") @PathVariable UUID id) {
         Vivienda v = service.findById(id).get();
         Interesa interes = Interesa.builder()
                 .interesado(user)
@@ -317,7 +317,7 @@ public class ViviendaController {
         interes.addToVivienda(v);
         interesaService.save(interes);
 
-        return ResponseEntity.ok().body(interesaDtoConverter.interesaToGetInteresaDto(interes));
+        return ResponseEntity.ok().body(v);
     }
 
     @Operation(summary = "Eliminar el interés de un interesado por una vivienda")

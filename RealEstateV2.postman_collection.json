@@ -33,7 +33,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/auth/register/ADMIN",
+							"raw": "localhost:8080/auth/register/admin",
 							"host": [
 								"localhost"
 							],
@@ -41,7 +41,7 @@
 							"path": [
 								"auth",
 								"register",
-								"ADMIN"
+								"admin"
 							]
 						}
 					},
@@ -120,7 +120,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/auth/register/GESTOR",
+							"raw": "localhost:8080/auth/register/gestor",
 							"host": [
 								"localhost"
 							],
@@ -128,7 +128,7 @@
 							"path": [
 								"auth",
 								"register",
-								"GESTOR"
+								"gestor"
 							]
 						}
 					},
@@ -208,7 +208,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/auth/register/PROPIETARIO",
+							"raw": "localhost:8080/auth/register/propietario",
 							"host": [
 								"localhost"
 							],
@@ -216,7 +216,7 @@
 							"path": [
 								"auth",
 								"register",
-								"PROPIETARIO"
+								"propietario"
 							]
 						}
 					},

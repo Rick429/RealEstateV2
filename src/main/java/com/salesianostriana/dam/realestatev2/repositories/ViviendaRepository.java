@@ -22,7 +22,7 @@ public interface ViviendaRepository extends JpaRepository<Vivienda, UUID>, JpaSp
             on v1.id = i.vivienda_id
             group by v1.id
             order by count(*) desc
-            limit 3)
+            limit :n)
             """, nativeQuery = true)
     public List<Vivienda> topViviendas();
 

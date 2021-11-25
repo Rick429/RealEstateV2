@@ -22,8 +22,9 @@ public class AuthController {
     private final UserDtoConverter userDtoConverter;
 
     @PostMapping("/auth/register/{role}")
-    public ResponseEntity<GetUserDto> nuevoUsuario(@RequestBody CreateUserDto newUser, @PathVariable UserRole role) {
-        UserEntity saved = userEntityService.save(newUser, role);
+    public ResponseEntity<GetUserDto> nuevoUsuario(@RequestBody CreateUserDto newUser, @PathVariable String role) {
+        UserRole userRole = UserRole.valueOf(role.toUpperCase());
+        UserEntity saved = userEntityService.save(newUser, userRole);
 
         if (saved == null)
             return ResponseEntity.badRequest().build();
