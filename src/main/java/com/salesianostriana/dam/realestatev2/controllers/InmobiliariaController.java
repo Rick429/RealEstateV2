@@ -6,8 +6,10 @@ import com.salesianostriana.dam.realestatev2.dto.InmobiliariaDtoConverter;
 import com.salesianostriana.dam.realestatev2.models.Inmobiliaria;
 import com.salesianostriana.dam.realestatev2.services.InmobiliariaService;
 import com.salesianostriana.dam.realestatev2.upload.PaginationLinksUtils;
+import com.salesianostriana.dam.realestatev2.users.dto.CreateUserDto;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import com.salesianostriana.dam.realestatev2.users.model.UserRole;
+import com.salesianostriana.dam.realestatev2.users.service.UserEntityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,6 +40,7 @@ public class InmobiliariaController {
 
     private final InmobiliariaService service;
     private final InmobiliariaDtoConverter dtoConverter;
+    private final UserEntityService userEntityService;
     private final PaginationLinksUtils paginationLinksUtils;
 
     @Operation(summary = "Crear una nueva inmobiliaria ")
@@ -66,12 +69,57 @@ public class InmobiliariaController {
         }
     }
 
+    @Operation(summary = "Asignar un gestor a una inmobiliaria ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se crea un gestor y se le asigna a la inmobiliaria",
+                    content = { @Content(mediaType =  "aplication/json",
+                            schema = @Schema(implementation = Inmobiliaria.class))}),
+            @ApiResponse(responseCode = "403",
+                    description = "No tiene permiso para realizar esta acción",
+                    content = @Content),
+    })
+    @PostMapping("/inmobiliaria/{id}/gestor/")
+    public ResponseEntity<CreateUserDto> crearGestor(@AuthenticationPrincipal UserEntity user,
+                                                     @PathVariable UUID id, @RequestBody CreateUserDto nuevoGestor) {
+       if(/*userEntityService.findGestor(id)!=null ||*/ user.getRole().equals(UserRole.ADMIN)){
+           Inmobiliaria i = service.findById(id).get();
+           UserEntity saved = userEntityService.save(nuevoGestor, UserRole.GESTOR);
+
+           i.getGestores().add(saved);
+
+           service.edit(i);
+           return ResponseEntity.ok().body(nuevoGestor);
+
+       } else {
+           return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+       }
+    }
+
+    @DeleteMapping("/inmobiliaria/gestor/{id}")
+    public ResponseEntity<Inmobiliaria> deleteGestor(@AuthenticationPrincipal UserEntity user,
+                                                     @PathVariable UUID id) {
+        if(/*userEntityService.findGestor(id)!=null ||*/ user.getRole().equals(UserRole.ADMIN)){
+            UserEntity u = userEntityService.findById(id).get();
+            Inmobiliaria in = u.getInmobiliaria();
+            u.removeGestorInmobiliaria(in);
+            userEntityService.save(u);
+            return ResponseEntity.noContent().build();
+
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
     @Operation(summary = "Obtener gestores de una inmobiliaria ")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "2010",
+            @ApiResponse(responseCode = "200",
                     description = "Se devuelve una lista de gestores",
                     content = { @Content(mediaType =  "aplication/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),
+            @ApiResponse(responseCode = "403",
+                    description = "No tiene permiso para realizar esta acción",
+                    content = @Content),
             @ApiResponse(responseCode = "404",
                     description = "No hay gestores",
                     content = @Content),
@@ -90,9 +138,6 @@ public class InmobiliariaController {
         }
         }
     }
-
-
-
 
     @Operation(summary = "Lista todos las inmobiliarias")
     @ApiResponses(value = {
@@ -123,7 +168,7 @@ public class InmobiliariaController {
 
     @Operation(summary = "Se busca una inmobiliaria por su ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204",
+            @ApiResponse(responseCode = "200",
                     description = "Se ha encontrado la inmobiliaria con ese ID",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),

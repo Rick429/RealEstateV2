@@ -55,16 +55,24 @@ public class ViviendaController {
                     description = "Se ha creado correctamente",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Vivienda.class))}),
-            @ApiResponse(responseCode = "400",
-                    description = "Hay un error en los datos",
+            @ApiResponse(responseCode = "403",
+                    description = "No tiene permiso para realizar esta acción",
                     content = @Content),
     })
     @PostMapping("/")
-    public ResponseEntity<CreateViviendaDto> create(@AuthenticationPrincipal UserEntity user,@RequestBody CreateViviendaDto viviendaNueva) {
-        service.create(user, viviendaNueva);
-        return ResponseEntity.
-                status(HttpStatus.CREATED)
-                .body(viviendaNueva);
+    public ResponseEntity<CreateViviendaDto> create(@AuthenticationPrincipal UserEntity user,
+                                                    @RequestBody CreateViviendaDto viviendaNueva) {
+        if(user.getRole().equals(UserRole.PROPIETARIO)){
+            service.create(user, viviendaNueva);
+            return ResponseEntity.
+                    status(HttpStatus.CREATED)
+                    .body(viviendaNueva);
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus
+                            .FORBIDDEN).build();
+        }
+
     }
 
     @Operation(summary = "Obtener la lista de todas las viviendas")
@@ -123,37 +131,20 @@ public class ViviendaController {
                 .of(service.findById(id).map(dtoConverter::viviendaToGetViviendaDto));
     }
 
-/* No será necesario usar este método porque se creo´uno que filtra
-    @GetMapping("/")
-    public ResponseEntity<Page<GetViviendaDto>> findAll(@PageableDefault(size = 10, page = 0) Pageable pageable, HttpServletRequest request){
-        Page<Vivienda> v = service.findAll(pageable);
-        if(v.isEmpty()){
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }else{
-            Page<GetViviendaDto> listDto = v.map(dtoConverter::viviendaToGetViviendaDtoAll);
-            UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
-
-
-            return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(listDto, uriBuilder)).body(listDto);
-        }
-    }
-
- */
-
     @Operation(summary = "Se modifica una vivienda por su ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204",
+            @ApiResponse(responseCode = "200",
                     description = "Se ha encontrado la vivienda con ese ID y se edita correctamente",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Vivienda.class))}),
-            @ApiResponse(responseCode = "404",
-                    description = "No se encuentra una vivienda con ese ID",
+            @ApiResponse(responseCode = "403",
+                    description = "No tiene permiso para realizar esta acción",
                     content = @Content),
     })
     @PutMapping("/{id}")
-    public ResponseEntity<EditViviendaDto> edit(@RequestBody EditViviendaDto vivienda, @Parameter(description = "El ID de la vivienda que queremos editar") @PathVariable UUID id,
+    public ResponseEntity<EditViviendaDto> edit(@RequestBody EditViviendaDto vivienda,
+                                                @Parameter(description = "El ID de la vivienda que queremos editar")
+                                                @PathVariable UUID id,
                                          @AuthenticationPrincipal UserEntity user) {
         UserEntity userId = service.findById(id).get().getPropietario();
        if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
@@ -332,8 +323,9 @@ public class ViviendaController {
                     description = "No existe el interes",
                     content = @Content),
     })
-    public ResponseEntity<?> eliminarInteres(GetInteresadoDto id2, UUID id){
-        return service.eliminarInteres(id, id2);
+    @DeleteMapping("/vivienda/{id}/meinteresa/")
+    public ResponseEntity<?> eliminarInteres(@AuthenticationPrincipal UserEntity user, @PathVariable UUID id){
+        return service.eliminarInteres(id, user);
     }
 
     @Operation(summary = "Lista de las 10 viviedas con más intereses")

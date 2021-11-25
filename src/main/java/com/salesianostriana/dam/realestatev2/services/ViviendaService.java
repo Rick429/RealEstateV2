@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -246,7 +247,6 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         return this.repositorio.findAll(todas, pageable);
     }
 
-
     public Interesa createInteresa(UserEntity user, UUID id, String mensaje){
         Vivienda v = this.findById(id).get();
         Interesa interesa= new Interesa();
@@ -257,8 +257,8 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         return interesa;
     }
 
-    public ResponseEntity<?> eliminarInteres(UUID id, GetInteresadoDto id2){
-        Interesa i = interesaService.findOne(id, id2.getId());
+    public ResponseEntity<?> eliminarInteres(UUID id, UserEntity user){
+        Interesa i = interesaService.findOne(id, user.getId());
         interesaService.delete(i);
         return ResponseEntity.noContent().build();
     }
