@@ -267,6 +267,18 @@
 				},
 				{
 					"name": "3.-Listar propietarios",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"idPropietario\", jsonData[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -310,14 +322,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/propietario/e6d207f4-4c56-11ec-81d3-0242ac130003",
+							"raw": "localhost:8080/propietario/{{idPropietario}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"propietario",
-								"e6d207f4-4c56-11ec-81d3-0242ac130003"
+								"{{idPropietario}}"
 							]
 						}
 					},
@@ -339,14 +351,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/propietario/ac1b4618-7d50-1bf2-817d-511a4dd70000",
+							"raw": "localhost:8080/propietario/{{idPropietario}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"propietario",
-								"ac1b4618-7d50-1bf2-817d-511a4dd70000"
+								"{{idPropietario}}"
 							]
 						}
 					},
@@ -528,7 +540,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{tokenAdmin}}",
+									"value": "{{tokenPropietario}}",
 									"type": "string"
 								}
 							]
@@ -712,7 +724,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/inmobiliaria/gestor/1af7ac5a-7d57-11ca-817d-57c1ddee0000",
+							"raw": "http://localhost:8080/inmobiliaria/gestor/ac1b4618-7d5c-1369-817d-5c33a7d70000",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -721,7 +733,7 @@
 							"path": [
 								"inmobiliaria",
 								"gestor",
-								"1af7ac5a-7d57-11ca-817d-57c1ddee0000"
+								"ac1b4618-7d5c-1369-817d-5c33a7d70000"
 							]
 						}
 					},
@@ -1030,6 +1042,10 @@
 		},
 		{
 			"key": "tokenPropietario",
+			"value": ""
+		},
+		{
+			"key": "idPropietario",
 			"value": ""
 		}
 	]
