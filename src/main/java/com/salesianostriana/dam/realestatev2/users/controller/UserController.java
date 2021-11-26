@@ -4,6 +4,7 @@ import com.salesianostriana.dam.realestatev2.models.Vivienda;
 import com.salesianostriana.dam.realestatev2.upload.PaginationLinksUtils;
 import com.salesianostriana.dam.realestatev2.users.dto.GetPropietarioDto;
 import com.salesianostriana.dam.realestatev2.users.dto.GetPropietarioDtoVi;
+import com.salesianostriana.dam.realestatev2.users.dto.GetUserDto;
 import com.salesianostriana.dam.realestatev2.users.dto.UserDtoConverter;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import com.salesianostriana.dam.realestatev2.users.model.UserRole;
@@ -16,12 +17,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -109,6 +112,71 @@ public class UserController {
                     .status(403)
                     .build();
         }
+    }
+
+    @Operation(summary = "Listar interesados por alguna vivienda")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha encontrado la lista de interesados",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Vivienda.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No hay interesados",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No tiene permisos para realizar esta acción",
+                    content = @Content),
+    })
+    @GetMapping("/interesado/")
+    public ResponseEntity<List<GetUserDto>> listInteresados(@AuthenticationPrincipal UserEntity user) {
+
+        if (user.getRole().equals(UserRole.ADMIN)) {
+            List<UserEntity> intereses = userEntityService.findAll();
+            List<UserEntity> interesados = new ArrayList<>();
+
+            for (UserEntity interesado : intereses) {
+                if (!interesado.getIntereses().isEmpty())
+                    interesados.add(interesado);
+            }
+            if (interesados.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity
+                    .ok().body(interesados.stream()
+                            .map(userDtoConverter::convertUserEntityToGetUserDto)
+                            .collect(Collectors.toList()));
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @Operation(summary = "Buscar un interesado por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha encontrado el interesado",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Vivienda.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No hay un interesado con ese id",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No tiene permisos para realizar esta acción",
+                    content = @Content),
+    })
+    @GetMapping("/interesado/{id}")
+    public ResponseEntity<GetUserDto> interesadoPorId(@AuthenticationPrincipal UserEntity user, @PathVariable UUID id) {
+        Optional<UserEntity> interesado = userEntityService.findById(id);
+        if(interesado.get().getIntereses().isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        if(user.getRole().equals(UserRole.PROPIETARIO)&&user.getId().equals(id)||
+                user.getRole().equals(UserRole.ADMIN)){
+            return ResponseEntity.of(userEntityService.findById(id).map(userDtoConverter::convertUserEntityToGetUserDto));
+
+        }else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
     }
 
     @Operation(summary = "Lista de los 10 propietarios con más viviendas asociadas")

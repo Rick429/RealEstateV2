@@ -950,16 +950,47 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/vivienda/interesado/",
+							"raw": "http://localhost:8080/propietario/interesado/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"vivienda",
+								"propietario",
 								"interesado",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.-Interesado por id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/propietario/interesado/e6d207f4-4c56-11ec-81d3-0242ac130003",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"propietario",
+								"interesado",
+								"e6d207f4-4c56-11ec-81d3-0242ac130003"
 							]
 						}
 					},

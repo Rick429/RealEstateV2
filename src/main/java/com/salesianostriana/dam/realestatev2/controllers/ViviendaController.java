@@ -270,42 +270,6 @@ public class ViviendaController {
         }
     }
 
-    @Operation(summary = "Listar interesados por alguna vivienda")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Se ha encontrado la lista de interesados",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Vivienda.class))}),
-            @ApiResponse(responseCode = "404",
-                    description = "No hay interesados",
-                    content = @Content),
-            @ApiResponse(responseCode = "403",
-                    description = "No tiene permisos para realizar esta acción",
-                    content = @Content),
-    })
-    @GetMapping("/interesado/")
-    public ResponseEntity<List<GetUserDto>> listInteresados(@AuthenticationPrincipal UserEntity user) {
-
-        if (user.getRole().equals(UserRole.ADMIN)) {
-            List<UserEntity> intereses = userEntityService.findAll();
-            List<UserEntity> interesados = new ArrayList<>();
-
-            for (UserEntity interesado : intereses) {
-                if (!interesado.getIntereses().isEmpty())
-                    interesados.add(interesado);
-            }
-            if (interesados.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity
-                    .ok().body(interesados.stream()
-                            .map(userDtoConverter::convertUserEntityToGetUserDto)
-                            .collect(Collectors.toList()));
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
-
     @Operation(summary = "Añadir un nuevo me interesa a una vivienda")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
