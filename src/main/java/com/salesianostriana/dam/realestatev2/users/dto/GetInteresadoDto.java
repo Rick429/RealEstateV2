@@ -13,7 +13,7 @@ import java.util.UUID;
 public class GetInteresadoDto {
 
     private UUID id;
-    private String nombre, apellidos, direccion, email, telefono, avatar, mensaje;
+    private String nombre, apellidos, email, mensaje;
     private LocalDateTime createdDate;
 
 }

@@ -6,8 +6,6 @@ import com.salesianostriana.dam.realestatev2.services.InmobiliariaService;
 import com.salesianostriana.dam.realestatev2.services.InteresaService;
 import com.salesianostriana.dam.realestatev2.services.ViviendaService;
 import com.salesianostriana.dam.realestatev2.upload.PaginationLinksUtils;
-import com.salesianostriana.dam.realestatev2.users.dto.GetInteresadoDto;
-import com.salesianostriana.dam.realestatev2.users.dto.GetUserDto;
 import com.salesianostriana.dam.realestatev2.users.dto.UserDtoConverter;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import com.salesianostriana.dam.realestatev2.users.model.UserRole;
@@ -28,13 +26,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Log
 @CrossOrigin(origins = "http://localhost:4200")
@@ -46,11 +42,9 @@ public class ViviendaController {
 
     private final ViviendaService service;
     private final UserEntityService userEntityService;
-    private final UserDtoConverter userDtoConverter;
     private final ViviendaDtoConverter dtoConverter;
     private final InmobiliariaService inmobiliariaService;
     private final PaginationLinksUtils paginationLinksUtils;
-    private final InteresaService interesaService;
     private final InteresaDtoConverter interesaDtoConverter;
 
     @Operation(summary = "Se añade una vivienda")
@@ -76,7 +70,6 @@ public class ViviendaController {
                     .status(HttpStatus
                             .FORBIDDEN).build();
         }
-
     }
 
     @Operation(summary = "Obtener la lista de todas las viviendas")
@@ -109,12 +102,10 @@ public class ViviendaController {
         if (resultado.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-
-            Page<GetViviendaDto> dtoList = resultado.map(dtoConverter::viviendaToGetViviendaDtoAll);
+            Page<GetViviendaDto> dtoList = resultado.map(dtoConverter::viviendaToGetViviendaDto);
             UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
             return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(dtoList, uriBuilder)).body(dtoList);
         }
-
     }
 
     @Operation(summary = "Se busca una vivienda por id")
@@ -270,7 +261,8 @@ public class ViviendaController {
         }
     }
 
-    @Operation(summary = "Añadir un nuevo me interesa a una vivienda")
+
+    @Operation(summary = "Añadir un nuevo me interesa a una vivienda, creando un interesado al mismo tiempo")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
                     description = "Se crea correctamente el me interesa",
@@ -281,18 +273,13 @@ public class ViviendaController {
                     content = @Content),
     })
     @PostMapping("/{id}/meinteresa")
-    public ResponseEntity<Vivienda> addInteresadoAndInteresa(@AuthenticationPrincipal UserEntity user, @RequestBody String mensaje, @Parameter(description = "El ID de la vivienda que queremos consultar") @PathVariable UUID id) {
-        Vivienda v = service.findById(id).get();
-        Interesa interes = Interesa.builder()
-                .interesado(user)
-                .vivienda(v)
-                .mensaje(mensaje)
-                .build();
-        interes.addToInteresado(user);
-        interes.addToVivienda(v);
-        interesaService.save(interes);
-
-        return ResponseEntity.ok().body(v);
+    public ResponseEntity<?> createInteresa(@AuthenticationPrincipal UserEntity user,
+                                                     @RequestBody String mensaje, @PathVariable UUID id){
+//        if(user.getIntereses().contains(service.findById(id).get())){
+//            return ResponseEntity.badRequest().build();
+//        }
+        Interesa i = service.createInteresa(id, mensaje, user.getId());
+        return ResponseEntity.ok().body(interesaDtoConverter.interesaToGetInteresaDto(i));
     }
 
     @Operation(summary = "Eliminar el interés de un interesado por una vivienda")
@@ -344,7 +331,7 @@ public class ViviendaController {
         } else {
             List<GetViviendaDto> viviendasDTO = new ArrayList<>();
             for (int i = 0; i < topViviendas.size(); i++) {
-                viviendasDTO.add(dtoConverter.viviendaToGetViviendaDtoAll(topViviendas.get(i)));
+                viviendasDTO.add(dtoConverter.viviendaToGetViviendaDto(topViviendas.get(i)));
             }
             return ResponseEntity
                     .ok().body(viviendasDTO);

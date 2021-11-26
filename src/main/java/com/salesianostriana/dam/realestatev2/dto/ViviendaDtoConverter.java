@@ -120,40 +120,6 @@ public class ViviendaDtoConverter {
                 .build();
     }
 
-
-    public GetViviendaDto viviendaToGetViviendaDtoAll(Vivienda v) {
-        return GetViviendaDto
-                .builder()
-                .id(v.getId())
-                .precio(v.getPrecio())
-                .tipo(v.getTipo())
-                .direccion(v.getDireccion())
-                .descripcion(v.getDescripcion())
-                .metrosCuadrados(v.getMetrosCuadrados())
-                .latlng(v.getLatlng())
-                .avatarVivienda(v.getAvatar())
-                .avatarPropietario(v.getPropietario().getAvatar())
-                .telefono(v.getPropietario().getTelefono())
-                .email(v.getPropietario().getEmail())
-                .intereses(v.getIntereses().size())
-                .tieneGaraje(v.isTieneGaraje())
-                .tieneAscensor(v.isTieneAscensor())
-                .tienePiscina(v.isTienePiscina())
-                .numHabitaciones(v.getNumHabitaciones())
-                .numBanyos(v.getNumBanyos())
-                .titulo(v.getTitulo())
-                .nombre(v.getPropietario().getNombre())
-                .apellidos(v.getPropietario().getApellidos())
-                .poblacion(v.getPoblacion())
-                .provincia(v.getProvincia())
-                .codigoPostal(v.getCodigoPostal())
-                .tipo(v.getTipo())
-                .estado(v.getEstado())
-                .propietarioId(v.getPropietario().getId())
-                .inmobiliariaId(v.getInmobiliaria()==null?null:v.getInmobiliaria().getId())
-                .build();
-    }
-
     public Vivienda createViviendaDtoToVivienda(CreateViviendaDto v) {
         return Vivienda
                 .builder()

@@ -59,57 +59,6 @@ public class UserDtoConverter {
                 .build();
     }
 
-    public UserEntity getInteresadoDtoToInteresado(GetInteresadoDto i){
-        return UserEntity.builder()
-                .id(i.getId())
-                .nombre(i.getNombre())
-                .apellidos(i.getApellidos())
-                .direccion(i.getDireccion())
-                .email(i.getEmail())
-                .telefono(i.getTelefono())
-                .avatar(i.getAvatar())
-                .build();
-    }
-
-    public Interesa getMeInteresa(GetInteresadoDto i){
-        return Interesa.builder()
-                .createdDate(LocalDateTime.now())
-                .mensaje(i.getMensaje())
-                .build();
-    }
-
-    public GetInteresadoDto interesadoToGetInteresadoDto(UserEntity i){
-        return GetInteresadoDto.builder()
-                .id(i.getId())
-                .nombre(i.getNombre())
-                .apellidos(i.getApellidos())
-                .direccion(i.getDireccion())
-                .email(i.getEmail())
-                .telefono(i.getTelefono())
-                .avatar(i.getAvatar())
-                .build();
-    }
-
-    public GetInteresadoIndividual interesadoToGetInteresadoIndividual(UserEntity i){
-        return GetInteresadoIndividual.builder()
-                .id(i.getId())
-                .nombre(i.getNombre())
-                .apellidos(i.getApellidos())
-                .direccion(i.getDireccion())
-                .email(i.getEmail())
-                .telefono(i.getTelefono())
-                .avatar(i.getAvatar()).build();
-    }
-
-    public UserEntity createUserDtoToUserEntity(CreateUserDto cu){
-        return UserEntity.builder()
-                .nombre(cu.getName())
-                .password(cu.getPassword())
-                .apellidos(cu.getLastname())
-                .email(cu.getEmail())
-                .build();
-    }
-
     public LoginDto createUserDtoToLoginDto(CreateUserDto cu){
         return LoginDto.builder()
                 .email(cu.getEmail())

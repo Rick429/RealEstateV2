@@ -2,7 +2,6 @@ package com.salesianostriana.dam.realestatev2.users.dto;
 
 import com.salesianostriana.dam.realestatev2.dto.GetInteresaPropietarioDto;
 import com.salesianostriana.dam.realestatev2.dto.GetViviendaBasicaDto;
-import com.salesianostriana.dam.realestatev2.models.Interesa;
 import lombok.*;
 import java.util.ArrayList;
 import java.util.List;

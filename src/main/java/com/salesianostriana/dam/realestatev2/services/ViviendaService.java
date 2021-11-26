@@ -5,21 +5,15 @@ import com.salesianostriana.dam.realestatev2.dto.ViviendaDtoConverter;
 import com.salesianostriana.dam.realestatev2.models.*;
 import com.salesianostriana.dam.realestatev2.repositories.ViviendaRepository;
 import com.salesianostriana.dam.realestatev2.services.base.BaseService;
-import com.salesianostriana.dam.realestatev2.users.dto.GetInteresadoDto;
 import com.salesianostriana.dam.realestatev2.users.dto.UserDtoConverter;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import com.salesianostriana.dam.realestatev2.users.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -249,17 +243,12 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         return this.repositorio.findAll(todas, pageable);
     }
 
-    public Interesa createInteresa(UserEntity user, UUID id, String mensaje) {
-        Vivienda v = this.findById(id).get();
-        Interesa interes = Interesa.builder()
-                .interesado(user)
-                .vivienda(v)
-                .mensaje(mensaje)
-                .build();
-        interes.addToInteresado(user);
-        interes.addToVivienda(v);
-        interesaService.save(interes);
-        return interes;
+    public Interesa createInteresa(UUID id, String mensaje, UUID id2) {
+
+        Vivienda vivienda = this.findById(id).get();
+        UserEntity user = userEntityService.findById(id2).get();
+        Interesa i = interesaService.darMeInteresa(vivienda, user, mensaje);
+        return i;
     }
 
     public ResponseEntity<?> eliminarInteres(UUID id, UserEntity user) {
