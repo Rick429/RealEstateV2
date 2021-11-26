@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.realestatev2.users.dto;
 
+import com.salesianostriana.dam.realestatev2.dto.InteresaDtoConverter;
 import com.salesianostriana.dam.realestatev2.dto.ViviendaDtoConverter;
 import com.salesianostriana.dam.realestatev2.models.Interesa;
 import com.salesianostriana.dam.realestatev2.security.dto.LoginDto;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class UserDtoConverter {
 
     private final ViviendaDtoConverter viviendaDtoConverter;
+    private final InteresaDtoConverter interesaDtoConverter;
 
     public GetUserDto convertUserEntityToGetUserDto(UserEntity user) {
         return GetUserDto.builder()
@@ -53,9 +55,9 @@ public class UserDtoConverter {
                 .email(p.getEmail())
                 .telefono(p.getTelefono())
                 .listaViviendas(p.getViviendas().stream().map(viviendaDtoConverter::viviendaToGetViviendaBasicaDto).collect(Collectors.toList()))
+                .intereses(p.getIntereses().stream().map(interesaDtoConverter::interesaTogetInteresaPropietarioDto).collect(Collectors.toList()))
                 .build();
     }
-
 
     public UserEntity getInteresadoDtoToInteresado(GetInteresadoDto i){
         return UserEntity.builder()

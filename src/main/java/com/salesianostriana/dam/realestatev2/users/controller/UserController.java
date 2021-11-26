@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/propietario")
-@Tag(name="Propietario", description = "Clase controladora de propietarios")
+@Tag(name = "Propietario", description = "Clase controladora de propietarios")
 public class UserController {
 
     private final UserEntityService userEntityService;
@@ -39,7 +40,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se listan correctamente todos los propietarios",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = UserEntity.class))}),
             @ApiResponse(responseCode = "404",
                     description = "La lista de propietatios está vacía",
@@ -52,24 +53,24 @@ public class UserController {
 //                .map(userDtoConverter::propietarioToGetpropietarioDto)
 //                .collect(Collectors.toList());
         List<GetPropietarioDto> usuarios = userEntityService.findUserByRole(UserRole.PROPIETARIO)
-                                            .stream().map(userDtoConverter::propietarioToGetpropietarioDto)
-                                             .collect(Collectors.toList());
-                if (usuarios.isEmpty()) {
-                    return ResponseEntity
-                            .notFound()
-                            .build();
-                } else {
-                    return ResponseEntity
-                            .ok()
-                            .body(usuarios);
-                }
+                .stream().map(userDtoConverter::propietarioToGetpropietarioDto)
+                .collect(Collectors.toList());
+        if (usuarios.isEmpty()) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        } else {
+            return ResponseEntity
+                    .ok()
+                    .body(usuarios);
+        }
     }
 
     @Operation(summary = "Se busca un propietario por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204",
                     description = "Se ha encontrado el propietario con ese ID",
-                    content = { @Content(mediaType = "application/json",
+                    content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserEntity.class))}),
             @ApiResponse(responseCode = "403",
                     description = "No tiene permiso para realizar esta acción",
@@ -77,8 +78,8 @@ public class UserController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<GetPropietarioDtoVi> findOne(@Parameter(description = "El ID del propietario que queremos consultar") @PathVariable UUID id, @AuthenticationPrincipal UserEntity user) {
-       UserEntity usuarioId = userEntityService.findById(id).get();
-        if(user.getEmail().equals(usuarioId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
+        UserEntity usuarioId = userEntityService.findById(id).get();
+        if (user.getEmail().equals(usuarioId.getEmail()) || user.getRole().equals(UserRole.ADMIN)) {
             return ResponseEntity
                     .of(userEntityService.findById(id).map(userDtoConverter::getPropietarioDatosVivienda));
         } else {
@@ -90,20 +91,20 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204",
                     description = "Se elimina correctamente el propietario",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = UserEntity.class))}),
             @ApiResponse(responseCode = "403",
                     description = "No tiene permiso para realizar esta acción",
                     content = @Content),
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@Parameter(description = "El id del propietario que queremos eliminar")@PathVariable UUID id,
-                                        @AuthenticationPrincipal UserEntity user){
+    public ResponseEntity<?> deleteById(@Parameter(description = "El id del propietario que queremos eliminar") @PathVariable UUID id,
+                                        @AuthenticationPrincipal UserEntity user) {
         UserEntity userId = userEntityService.findById(id).get();
-        if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
+        if (user.getEmail().equals(userId.getEmail()) || user.getRole().equals(UserRole.ADMIN)) {
             userEntityService.deleteById(id);
             return ResponseEntity.noContent().build();
-        }else {
+        } else {
             return ResponseEntity
                     .status(403)
                     .build();
@@ -114,22 +115,21 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se listan correctamente todos los propietarios",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = UserEntity.class))}),
             @ApiResponse(responseCode = "404",
                     description = "La lista de propietarios está vacía",
                     content = @Content),
     })
     @GetMapping("/top")
-    public ResponseEntity<List<GetPropietarioDtoVi>> findTop(){
+    public ResponseEntity<List<GetPropietarioDtoVi>> findTop() {
         List<UserEntity> topPropietarios = userEntityService.topPropietarios();
 
-        if(topPropietarios.isEmpty()){
+        if (topPropietarios.isEmpty()) {
             return ResponseEntity.notFound().build();
-        }
-        else {
+        } else {
             List<GetPropietarioDtoVi> propietariosDTOVi = new ArrayList<>();
-            for (int i = 0; i<topPropietarios.size(); i++) {
+            for (int i = 0; i < topPropietarios.size(); i++) {
                 propietariosDTOVi.add(userDtoConverter.getPropietarioDatosVivienda(topPropietarios.get(i)));
             }
             return ResponseEntity

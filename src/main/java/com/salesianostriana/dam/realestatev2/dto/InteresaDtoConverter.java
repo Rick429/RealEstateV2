@@ -16,4 +16,12 @@ public class InteresaDtoConverter {
                 .createdDate(in.getCreatedDate())
                 .build();
     }
+
+    public GetInteresaPropietarioDto interesaTogetInteresaPropietarioDto (Interesa in){
+
+        return GetInteresaPropietarioDto.builder()
+                .idVivienda(in.getVivienda().getId())
+                .mensaje(in.getMensaje())
+                .build();
+    }
 }

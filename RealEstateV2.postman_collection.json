@@ -901,7 +901,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{tokenAdmin}}",
+									"value": "{{tokenPropietario}}",
 									"type": "string"
 								}
 							]
@@ -950,7 +950,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/vivienda/interesado",
+							"raw": "http://localhost:8080/vivienda/interesado/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -958,7 +958,8 @@
 							"port": "8080",
 							"path": [
 								"vivienda",
-								"interesado"
+								"interesado",
+								""
 							]
 						}
 					},

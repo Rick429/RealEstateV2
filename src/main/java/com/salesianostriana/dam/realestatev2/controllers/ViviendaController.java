@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/vivienda")
-@Tag(name="Vivienda", description = "Clase controladora de viviendas")
+@Tag(name = "Vivienda", description = "Clase controladora de viviendas")
 public class ViviendaController {
 
     private final ViviendaService service;
@@ -65,7 +66,7 @@ public class ViviendaController {
     @PostMapping("/")
     public ResponseEntity<CreateViviendaDto> create(@AuthenticationPrincipal UserEntity user,
                                                     @RequestBody CreateViviendaDto viviendaNueva) {
-        if(user.getRole().equals(UserRole.PROPIETARIO)){
+        if (user.getRole().equals(UserRole.PROPIETARIO)) {
             service.create(user, viviendaNueva);
             return ResponseEntity.
                     status(HttpStatus.CREATED)
@@ -146,16 +147,16 @@ public class ViviendaController {
     public ResponseEntity<EditViviendaDto> edit(@RequestBody EditViviendaDto vivienda,
                                                 @Parameter(description = "El ID de la vivienda que queremos editar")
                                                 @PathVariable UUID id,
-                                         @AuthenticationPrincipal UserEntity user) {
+                                                @AuthenticationPrincipal UserEntity user) {
         UserEntity userId = service.findById(id).get().getPropietario();
-       if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
-           Vivienda v = dtoConverter.editViviendaDtoToVivienda(vivienda);
-           service.save(v);
-           EditViviendaDto ev = dtoConverter.viviendaToEditViviendaDto(v);
-           return ResponseEntity.ok().body(ev);
-       }else {
-           return ResponseEntity.status(403).build();
-       }
+        if (user.getEmail().equals(userId.getEmail()) || user.getRole().equals(UserRole.ADMIN)) {
+            Vivienda v = dtoConverter.editViviendaDtoToVivienda(vivienda);
+            service.save(v);
+            EditViviendaDto ev = dtoConverter.viviendaToEditViviendaDto(v);
+            return ResponseEntity.ok().body(ev);
+        } else {
+            return ResponseEntity.status(403).build();
+        }
 
     }
 
@@ -179,9 +180,9 @@ public class ViviendaController {
                     .build();
         } else {
             UserEntity userId = service.findById(id).get().getPropietario();
-            if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
-                Vivienda v=service.findById(id).get();
-                if(v.getInmobiliaria()!=null){
+            if (user.getEmail().equals(userId.getEmail()) || user.getRole().equals(UserRole.ADMIN)) {
+                Vivienda v = service.findById(id).get();
+                if (v.getInmobiliaria() != null) {
                     v.removeFromInmobiliaria(v.getInmobiliaria());
                 }
                 v.removePropietario(v.getPropietario());
@@ -189,7 +190,7 @@ public class ViviendaController {
                 return ResponseEntity
                         .noContent()
                         .build();
-            }else {
+            } else {
                 return ResponseEntity
                         .status(403)
                         .build();
@@ -211,25 +212,25 @@ public class ViviendaController {
     public ResponseEntity<GetViviendaDto> asignarInmobiliariaAVivienda(@Parameter(description = "El id de la vivienda a la que queremos añadirle una inmobiliaria ") @PathVariable UUID id,
                                                                        @Parameter(description = "El id de la inmobiliaria que añadiremos a una vivienda") @PathVariable UUID id2,
                                                                        @AuthenticationPrincipal UserEntity user) {
-            if (service.findById(id).isEmpty() || inmobiliariaService.findById(id2).isEmpty()) {
-                return ResponseEntity
-                        .notFound()
-                        .build();
+        if (service.findById(id).isEmpty() || inmobiliariaService.findById(id2).isEmpty()) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        } else {
+            UserEntity userId = service.findById(id).get().getPropietario();
+            if (user.getEmail().equals(userId.getEmail()) || user.getRole().equals(UserRole.ADMIN)) {
+                Vivienda v = service.findById(id).get();
+                Inmobiliaria inmoAsignada = inmobiliariaService.findById(id2).get();
+                v.addToInmobiliaria(inmoAsignada);
+                service.save(v);
+                GetViviendaDto viviendaDto = service.findById(id).map(dtoConverter::viviendaToGetViviendaDto).get();
+                return ResponseEntity.ok().body(viviendaDto);
             } else {
-                UserEntity userId = service.findById(id).get().getPropietario();
-                if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)){
-                    Vivienda v = service.findById(id).get();
-                    Inmobiliaria inmoAsignada = inmobiliariaService.findById(id2).get();
-                    v.addToInmobiliaria(inmoAsignada);
-                    service.save(v);
-                    GetViviendaDto viviendaDto = service.findById(id).map(dtoConverter::viviendaToGetViviendaDto).get();
-                    return ResponseEntity.ok().body(viviendaDto);
-                }else {
-                    return ResponseEntity
-                            .status(403)
-                            .build();
-                }
+                return ResponseEntity
+                        .status(403)
+                        .build();
             }
+        }
     }
 
     @Operation(summary = "Borra una inmobiliaria de una vivienda")
@@ -246,27 +247,27 @@ public class ViviendaController {
     public ResponseEntity<?> eliminarInmobiliariaDeVivienda(@Parameter(description = "El id de la vivienda a la que queremos eliminarle una inmobiliaria ") @PathVariable UUID id,
                                                             @AuthenticationPrincipal UserEntity user) {
         Inmobiliaria i = service.findById(id).get().getInmobiliaria();
-            if (service.findById(id).isEmpty() || inmobiliariaService.findById(i.getId()).isEmpty()) {
+        if (service.findById(id).isEmpty() || inmobiliariaService.findById(i.getId()).isEmpty()) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        } else {
+            UserEntity userId = service.findById(id).get().getPropietario();
+            Inmobiliaria inmoAsignada = inmobiliariaService.findById(i.getId()).get();
+            if (user.getEmail().equals(userId.getEmail()) || user.getRole().equals(UserRole.ADMIN) ||
+                    inmoAsignada.getGestores().contains(user) || user.getRole().equals(UserRole.PROPIETARIO)) {
+                Vivienda v = service.findById(id).get();
+                v.removeFromInmobiliaria(inmoAsignada);
+                service.save(v);
                 return ResponseEntity
-                        .notFound()
+                        .noContent()
                         .build();
             } else {
-                UserEntity userId = service.findById(id).get().getPropietario();
-                Inmobiliaria inmoAsignada = inmobiliariaService.findById(i.getId()).get();
-                if(user.getEmail().equals(userId.getEmail())||user.getRole().equals(UserRole.ADMIN)||
-                        inmoAsignada.getGestores().contains(user)|| user.getRole().equals(UserRole.PROPIETARIO)){
-                    Vivienda v = service.findById(id).get();
-                    v.removeFromInmobiliaria(inmoAsignada);
-                    service.save(v);
-                    return ResponseEntity
-                            .noContent()
-                            .build();
-                }else {
-                    return ResponseEntity
-                            .status(403)
-                            .build();
-                }
+                return ResponseEntity
+                        .status(403)
+                        .build();
             }
+        }
     }
 
     @Operation(summary = "Listar interesados por alguna vivienda")
@@ -278,21 +279,31 @@ public class ViviendaController {
             @ApiResponse(responseCode = "404",
                     description = "No hay interesados",
                     content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No tiene permisos para realizar esta acción",
+                    content = @Content),
     })
     @GetMapping("/interesado/")
-    public ResponseEntity <List<GetUserDto>> listInteresados() {
+    public ResponseEntity<List<GetUserDto>> listInteresados(@AuthenticationPrincipal UserEntity user) {
 
-        List<UserEntity> intereses = userEntityService.findAll();
-        List<UserEntity> interesados = new ArrayList<>();
+        if (user.getRole().equals(UserRole.ADMIN)) {
+            List<UserEntity> intereses = userEntityService.findAll();
+            List<UserEntity> interesados = new ArrayList<>();
 
-        for (UserEntity interesado:intereses) {
-            if(!interesado.getIntereses().isEmpty())
-            interesados.add(interesado);
-        }
-        return ResponseEntity
+            for (UserEntity interesado : intereses) {
+                if (!interesado.getIntereses().isEmpty())
+                    interesados.add(interesado);
+            }
+            if (interesados.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity
                     .ok().body(interesados.stream()
                             .map(userDtoConverter::convertUserEntityToGetUserDto)
                             .collect(Collectors.toList()));
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @Operation(summary = "Añadir un nuevo me interesa a una vivienda")
@@ -326,13 +337,28 @@ public class ViviendaController {
                     description = "El interesado se ha borrado correctamente",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Vivienda.class))}),
+            @ApiResponse(responseCode = "403",
+                    description = "No tienes los permisos para realizar esta acción",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Vivienda.class))}),
             @ApiResponse(responseCode = "404",
                     description = "No existe el interes",
                     content = @Content),
     })
-    @DeleteMapping("/vivienda/{id}/meinteresa/")
-    public ResponseEntity<?> eliminarInteres(@AuthenticationPrincipal UserEntity user, @PathVariable UUID id){
-        return service.eliminarInteres(id, user);
+    @DeleteMapping("/{id}/meinteresa/")
+    public ResponseEntity<?> eliminarInteres(@AuthenticationPrincipal UserEntity user, @PathVariable UUID id) {
+        Optional<Vivienda> v = service.findById(id);
+
+        if (v.isPresent()) {
+            UserEntity u = userEntityService.findById(user.getId()).get();
+            if (user.getRole().equals(UserRole.PROPIETARIO)) {
+                return service.eliminarInteres(id, user);
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @Operation(summary = "Lista de las 10 viviedas con más intereses")
@@ -346,15 +372,14 @@ public class ViviendaController {
                     content = @Content),
     })
     @GetMapping("/top")
-    public ResponseEntity<List<GetViviendaDto>> findTop(){
+    public ResponseEntity<List<GetViviendaDto>> findTop() {
         List<Vivienda> topViviendas = service.top3Viviendas();
 
-        if(topViviendas.isEmpty()){
+        if (topViviendas.isEmpty()) {
             return ResponseEntity.notFound().build();
-        }
-        else {
+        } else {
             List<GetViviendaDto> viviendasDTO = new ArrayList<>();
-            for (int i = 0; i<topViviendas.size(); i++) {
+            for (int i = 0; i < topViviendas.size(); i++) {
                 viviendasDTO.add(dtoConverter.viviendaToGetViviendaDtoAll(topViviendas.get(i)));
             }
             return ResponseEntity

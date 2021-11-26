@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class InmobiliariaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
                     description = "Se crea correctamente una inmobiliaria",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),
             @ApiResponse(responseCode = "400",
                     description = "Hay un error en los datos",
@@ -64,16 +65,15 @@ public class InmobiliariaController {
     @PostMapping("/")
     public ResponseEntity<Inmobiliaria> create(@AuthenticationPrincipal UserEntity user, @RequestBody Inmobiliaria nuevo) {
 
-        if(user.getRole().equals(UserRole.ADMIN)){
-        if(nuevo.getNombre().isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-        else {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(service.save(nuevo));
-        }
-        }else{
+        if (user.getRole().equals(UserRole.ADMIN)) {
+            if (nuevo.getNombre().isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body(service.save(nuevo));
+            }
+        } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
@@ -82,7 +82,7 @@ public class InmobiliariaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
                     description = "Se crea un gestor y se le asigna a la inmobiliaria",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),
             @ApiResponse(responseCode = "400",
                     description = "Hay un error en los datos",
@@ -94,20 +94,23 @@ public class InmobiliariaController {
     @PostMapping("/{id}/gestor/")
     public ResponseEntity<CreateUserDto> crearGestor(@AuthenticationPrincipal UserEntity user,
                                                      @PathVariable UUID id, @RequestBody CreateUserDto nuevoGestor) {
-        Inmobiliaria i = service.findById(id).get();
-       if(user.getRole().equals(UserRole.GESTOR)&&user.getInmobiliaria().equals(i.getId()) || user.getRole().equals(UserRole.ADMIN)){
-           if(nuevoGestor.getEmail().isEmpty()) {
-               return ResponseEntity.badRequest().build();
-           }
-           else {
-           UserEntity saved = userEntityService.saveGestor(nuevoGestor,i);
-           saved.addGestorInmobiliaria(i);
-           service.edit(i);
-           return ResponseEntity.ok().body(nuevoGestor);
-           }
-       } else {
-           return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-       }
+        Optional<Inmobiliaria> i = service.findById(id);
+        if (i.isPresent()) {
+            if (user.getRole().equals(UserRole.GESTOR) && user.getInmobiliaria().equals(i.get().getId()) || user.getRole().equals(UserRole.ADMIN)) {
+                if (nuevoGestor.getEmail().isEmpty()) {
+                    return ResponseEntity.badRequest().build();
+                } else {
+                    UserEntity saved = userEntityService.saveGestor(nuevoGestor, i.get());
+                    saved.addGestorInmobiliaria(i.get());
+                    service.edit(i.get());
+                    return ResponseEntity.ok().body(nuevoGestor);
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
 
     }
 
@@ -115,7 +118,7 @@ public class InmobiliariaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204",
                     description = "Se elimina el gestor correctamente",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),
             @ApiResponse(responseCode = "404",
                     description = "No existe un gestor con ese id",
@@ -129,11 +132,11 @@ public class InmobiliariaController {
                                                      @PathVariable UUID id) {
         Inmobiliaria inmoLog = user.getInmobiliaria();
         Optional<UserEntity> u = userEntityService.findById(id);
-        if(u.isEmpty()){
+        if (u.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Inmobiliaria in = u.get().getInmobiliaria();
-        if(user.getRole().equals(UserRole.GESTOR)&&inmoLog.getId().equals(in.getId()) || user.getRole().equals(UserRole.ADMIN)){
+        if (user.getRole().equals(UserRole.GESTOR) && inmoLog.getId().equals(in.getId()) || user.getRole().equals(UserRole.ADMIN)) {
             u.get().removeGestorInmobiliaria(in);
             service.edit(in);
             userEntityService.delete(u.get());
@@ -147,7 +150,7 @@ public class InmobiliariaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se devuelve una lista de gestores",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),
             @ApiResponse(responseCode = "403",
                     description = "No tiene permiso para realizar esta acción",
@@ -160,14 +163,14 @@ public class InmobiliariaController {
     public ResponseEntity<List<GetUserDto>> obtenerGestores(@PathVariable UUID id, @AuthenticationPrincipal UserEntity user) {
 
         Inmobiliaria i = service.findById(id).get();
-        if(i.getGestores().isEmpty()){
+        if (i.getGestores().isEmpty()) {
             return ResponseEntity.notFound().build();
-        }else{
-        if(user.getRole().equals(UserRole.GESTOR)&&user.getInmobiliaria().getId().equals(i.getId())||user.getRole().equals(UserRole.ADMIN)){
-           return ResponseEntity.ok().body(i.getGestores().stream().map(userDtoConverter::convertUserEntityToGetUserDto).collect(Collectors.toList()));
-        }else{
-            return ResponseEntity.status(403).build();
-        }
+        } else {
+            if (user.getRole().equals(UserRole.GESTOR) && user.getInmobiliaria().getId().equals(i.getId()) || user.getRole().equals(UserRole.ADMIN)) {
+                return ResponseEntity.ok().body(i.getGestores().stream().map(userDtoConverter::convertUserEntityToGetUserDto).collect(Collectors.toList()));
+            } else {
+                return ResponseEntity.status(403).build();
+            }
         }
     }
 
@@ -175,7 +178,7 @@ public class InmobiliariaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se listan correctamente todas las inmobiliarias",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),
             @ApiResponse(responseCode = "404",
                     description = "La lista de inmobiliarias está vacía",
@@ -202,7 +205,7 @@ public class InmobiliariaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se ha encontrado la inmobiliaria con ese ID",
-                    content = { @Content(mediaType = "application/json",
+                    content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),
             @ApiResponse(responseCode = "404",
                     description = "No se encuentra la inmobiliaria con ese ID",
@@ -218,19 +221,19 @@ public class InmobiliariaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204",
                     description = "Se ha eliminado correctamente",
-                    content = { @Content(mediaType = "application/json",
+                    content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Inmobiliaria.class))}),
             @ApiResponse(responseCode = "404",
                     description = "No existe la inmobiliaria",
                     content = @Content),
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?>deleteById(@Parameter(description = "Id de la inmobiliaria que queremos representar") @PathVariable UUID id){
-        if(service.findById(id).isEmpty()){
+    public ResponseEntity<?> deleteById(@Parameter(description = "Id de la inmobiliaria que queremos representar") @PathVariable UUID id) {
+        if (service.findById(id).isEmpty()) {
             return ResponseEntity
                     .notFound()
                     .build();
-        } else{
+        } else {
             service.deleteById(id);
             return ResponseEntity
                     .noContent()
@@ -242,22 +245,21 @@ public class InmobiliariaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se listan correctamente todas las inmobiliarias",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = UserEntity.class))}),
             @ApiResponse(responseCode = "404",
                     description = "La lista de inmobiliarias está vacía",
                     content = @Content),
     })
     @GetMapping("/top")
-    public ResponseEntity<List<GetInmobiliariaDto>> findTop(){
+    public ResponseEntity<List<GetInmobiliariaDto>> findTop() {
         List<Inmobiliaria> topInmobiliarias = service.topInmobiliarias();
 
-        if(topInmobiliarias.isEmpty()){
+        if (topInmobiliarias.isEmpty()) {
             return ResponseEntity.notFound().build();
-        }
-        else {
+        } else {
             List<GetInmobiliariaDto> inmobiliariasDTO = new ArrayList<>();
-            for (int i = 0; i<topInmobiliarias.size(); i++) {
+            for (int i = 0; i < topInmobiliarias.size(); i++) {
                 inmobiliariasDTO.add(dtoConverter.getInmobiliariaDatosVivienda(topInmobiliarias.get(i)));
             }
             return ResponseEntity

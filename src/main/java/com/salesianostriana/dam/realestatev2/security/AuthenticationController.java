@@ -39,7 +39,7 @@ public class AuthenticationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
                     description = "Se hace login",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = UserEntity.class))}),
             @ApiResponse(responseCode = "400",
                     description = "Error en los datos",
@@ -71,7 +71,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> quienSoyYo(@AuthenticationPrincipal UserEntity user){
+    public ResponseEntity<?> quienSoyYo(@AuthenticationPrincipal UserEntity user) {
         return ResponseEntity.ok(convertUserToJwtUserResponse(user, null));
     }
 
@@ -91,7 +91,7 @@ public class AuthenticationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
                     description = "Se registra el usuario y se hace login",
-                    content = { @Content(mediaType =  "aplication/json",
+                    content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = UserEntity.class))}),
             @ApiResponse(responseCode = "400",
                     description = "Error en los datos",
@@ -101,7 +101,6 @@ public class AuthenticationController {
     public ResponseEntity<?> nuevoUsuario(@RequestBody CreateUserDto newUser, @PathVariable String role) {
         UserRole userRole = UserRole.valueOf(role.toUpperCase());
         UserEntity saved = userEntityService.save(newUser, userRole);
-
         if (saved == null)
             return ResponseEntity.badRequest().build();
         else

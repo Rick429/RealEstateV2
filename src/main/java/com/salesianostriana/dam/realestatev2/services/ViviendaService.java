@@ -10,6 +10,7 @@ import com.salesianostriana.dam.realestatev2.users.dto.UserDtoConverter;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import com.salesianostriana.dam.realestatev2.users.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -44,29 +46,29 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         return repositorio.topViviendas();
     }
 
-    public Page<Vivienda> findByArgs (final Optional<String>titulo,
-                                      final Optional<String> provincia,
-                                      final Optional<String> direccion,
-                                      final Optional<String> poblacion,
-                                      final Optional<Integer>codigoPostal,
-                                      final Optional<Integer>numBanyos,
-                                      final Optional<Integer>numHabitaciones,
-                                      final Optional<Integer>metrosCuadrados,
-                                      final Optional<Double>precio,
-                                      final Optional <Boolean>tienePiscina,
-                                      final Optional<Boolean> tieneAscensor,
-                                      final Optional<Boolean> tieneGaraje,
-                                      final Optional<Tipo> tipo,
-                                      final Optional<Estado> estado,
-                                      Pageable pageable){
+    public Page<Vivienda> findByArgs(final Optional<String> titulo,
+                                     final Optional<String> provincia,
+                                     final Optional<String> direccion,
+                                     final Optional<String> poblacion,
+                                     final Optional<Integer> codigoPostal,
+                                     final Optional<Integer> numBanyos,
+                                     final Optional<Integer> numHabitaciones,
+                                     final Optional<Integer> metrosCuadrados,
+                                     final Optional<Double> precio,
+                                     final Optional<Boolean> tienePiscina,
+                                     final Optional<Boolean> tieneAscensor,
+                                     final Optional<Boolean> tieneGaraje,
+                                     final Optional<Tipo> tipo,
+                                     final Optional<Estado> estado,
+                                     Pageable pageable) {
 
         Specification<Vivienda> specTituloVivienda = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(titulo.isPresent()){
+                if (titulo.isPresent()) {
                     //Si siempre está presente se filtra por nombre
                     return criteriaBuilder.like(criteriaBuilder.lower(root.get("titulo")), "%" + titulo.get() + "%");
-                }else{
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -75,10 +77,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specProvinciaVivienda = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(provincia.isPresent()){
+                if (provincia.isPresent()) {
                     //Si siempre está presente se filtra por nombre
                     return criteriaBuilder.like(criteriaBuilder.lower(root.get("provincia")), "%" + provincia.get() + "%");
-                }else{
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -87,10 +89,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specDireccionVivienda = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(direccion.isPresent()){
+                if (direccion.isPresent()) {
                     //Si siempre está presente se filtra por nombre
                     return criteriaBuilder.like(criteriaBuilder.lower(root.get("direccion")), "%" + direccion.get() + "%");
-                }else{
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -99,10 +101,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specPoblacionVivienda = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(poblacion.isPresent()){
+                if (poblacion.isPresent()) {
                     //Si siempre está presente se filtra por nombre
                     return criteriaBuilder.like(criteriaBuilder.lower(root.get("poblacion")), "%" + poblacion.get() + "%");
-                }else{
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -111,10 +113,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specCodigoPostalVivienda = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(codigoPostal.isPresent()){
+                if (codigoPostal.isPresent()) {
                     //Si siempre está presente se filtra por nombre
-                    return criteriaBuilder.equal(root.get("codigoPostal"),  codigoPostal.get() );
-                }else{
+                    return criteriaBuilder.equal(root.get("codigoPostal"), codigoPostal.get());
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -123,10 +125,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specBanyosVivienda = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(numBanyos.isPresent()){
+                if (numBanyos.isPresent()) {
                     //Si siempre está presente se filtra por nombre
-                    return criteriaBuilder.equal(root.get("numBanyos"),  numBanyos.get() );
-                }else{
+                    return criteriaBuilder.equal(root.get("numBanyos"), numBanyos.get());
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -135,10 +137,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specNumHabitacionesVivienda = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(numHabitaciones.isPresent()){
+                if (numHabitaciones.isPresent()) {
                     //Si siempre está presente se filtra por nombre
-                    return criteriaBuilder.equal(root.get("numHabitaciones"),  numHabitaciones.get() );
-                }else{
+                    return criteriaBuilder.equal(root.get("numHabitaciones"), numHabitaciones.get());
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -147,10 +149,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specMetrosCuadradosVivienda = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(metrosCuadrados.isPresent()){
+                if (metrosCuadrados.isPresent()) {
                     //Si siempre está presente se filtra por nombre
-                    return criteriaBuilder.equal(root.get("metrosCuadrados"),  metrosCuadrados.get() );
-                }else{
+                    return criteriaBuilder.equal(root.get("metrosCuadrados"), metrosCuadrados.get());
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -159,10 +161,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> precioMenorQue = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(precio.isPresent()){
+                if (precio.isPresent()) {
                     //Si siempre está presente se filtra por nombre
                     return criteriaBuilder.lessThanOrEqualTo(root.get("precio"), precio.get());
-                }else{
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -171,10 +173,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specTienePiscina = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(tienePiscina.isPresent()){
+                if (tienePiscina.isPresent()) {
                     //Si siempre está presente se filtra por nombre
                     return criteriaBuilder.equal(root.get("tienePiscina"), tienePiscina.get());
-                }else{
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -183,10 +185,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specAscensor = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(tieneAscensor.isPresent()){
+                if (tieneAscensor.isPresent()) {
                     //Si siempre está presente se filtra por nombre
                     return criteriaBuilder.equal(root.get("tieneAscensor"), tieneAscensor.get());
-                }else{
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -195,10 +197,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specGaraje = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(tieneGaraje.isPresent()){
+                if (tieneGaraje.isPresent()) {
                     //Si siempre está presente se filtra por nombre
                     return criteriaBuilder.equal(root.get("tieneGaraje"), tieneGaraje.get());
-                }else{
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -208,10 +210,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specTipo = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(tipo.isPresent()){
+                if (tipo.isPresent()) {
                     //Si siempre está presente se filtra por nombre
                     return criteriaBuilder.equal(root.get("tipo"), tipo.get());
-                }else{
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -220,10 +222,10 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         Specification<Vivienda> specEstado = new Specification<Vivienda>() {
             @Override
             public Predicate toPredicate(Root<Vivienda> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                if(estado.isPresent()){
+                if (estado.isPresent()) {
                     //Si siempre está presente se filtra por nombre
                     return criteriaBuilder.equal(root.get("estado"), estado.get());
-                }else{
+                } else {
                     //Si no está presente siempre estará en verdadero
                     return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                 }
@@ -247,7 +249,7 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         return this.repositorio.findAll(todas, pageable);
     }
 
-    public Interesa createInteresa(UserEntity user, UUID id, String mensaje){
+    public Interesa createInteresa(UserEntity user, UUID id, String mensaje) {
         Vivienda v = this.findById(id).get();
         Interesa interes = Interesa.builder()
                 .interesado(user)
@@ -260,10 +262,16 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         return interes;
     }
 
-    public ResponseEntity<?> eliminarInteres(UUID id, UserEntity user){
-        Interesa i = interesaService.findOne(id, user.getId());
-        interesaService.delete(i);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> eliminarInteres(UUID id, UserEntity user) {
+        InteresPK interesPK = new InteresPK(id, user.getId());
+        Optional<Interesa> i = interesaService.findById(interesPK);
+        if (i.isPresent()) {
+            interesaService.delete(i.get());
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     public Vivienda create(UserEntity user, CreateViviendaDto viviendaNueva) {
