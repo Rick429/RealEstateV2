@@ -302,7 +302,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{tokenPropietario}}",
+									"value": "{{tokenAdmin}}",
 									"type": "string"
 								}
 							]

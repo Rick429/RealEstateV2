@@ -2,6 +2,7 @@ package com.salesianostriana.dam.realestatev2.users.dto;
 
 import com.salesianostriana.dam.realestatev2.dto.ViviendaDtoConverter;
 import com.salesianostriana.dam.realestatev2.models.Interesa;
+import com.salesianostriana.dam.realestatev2.security.dto.LoginDto;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -104,6 +105,13 @@ public class UserDtoConverter {
                 .password(cu.getPassword())
                 .apellidos(cu.getLastname())
                 .email(cu.getEmail())
+                .build();
+    }
+
+    public LoginDto createUserDtoToLoginDto(CreateUserDto cu){
+        return LoginDto.builder()
+                .email(cu.getEmail())
+                .password(cu.getPassword())
                 .build();
     }
 

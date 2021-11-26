@@ -3,7 +3,17 @@ package com.salesianostriana.dam.realestatev2.security;
 import com.salesianostriana.dam.realestatev2.security.dto.JwtUserResponse;
 import com.salesianostriana.dam.realestatev2.security.dto.LoginDto;
 import com.salesianostriana.dam.realestatev2.security.jwt.JwtProvider;
+import com.salesianostriana.dam.realestatev2.users.dto.CreateUserDto;
+import com.salesianostriana.dam.realestatev2.users.dto.GetUserDto;
+import com.salesianostriana.dam.realestatev2.users.dto.UserDtoConverter;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
+import com.salesianostriana.dam.realestatev2.users.model.UserRole;
+import com.salesianostriana.dam.realestatev2.users.service.UserEntityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +22,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
 
 @RestController
@@ -24,7 +32,19 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final UserEntityService userEntityService;
+    private final UserDtoConverter userDtoConverter;
 
+    @Operation(summary = "Se hace login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se hace login",
+                    content = { @Content(mediaType =  "aplication/json",
+                            schema = @Schema(implementation = UserEntity.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+    })
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
 
@@ -65,5 +85,26 @@ public class AuthenticationController {
                 .role(user.getRole().name())
                 .token(jwt)
                 .build();
+    }
+
+    @Operation(summary = "Registra nuevo usuario y hace login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se registra el usuario y se hace login",
+                    content = { @Content(mediaType =  "aplication/json",
+                            schema = @Schema(implementation = UserEntity.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+    })
+    @PostMapping("/auth/register/{role}")
+    public ResponseEntity<?> nuevoUsuario(@RequestBody CreateUserDto newUser, @PathVariable String role) {
+        UserRole userRole = UserRole.valueOf(role.toUpperCase());
+        UserEntity saved = userEntityService.save(newUser, userRole);
+
+        if (saved == null)
+            return ResponseEntity.badRequest().build();
+        else
+            return ResponseEntity.ok(this.login(userDtoConverter.createUserDtoToLoginDto(newUser)));
     }
 }
