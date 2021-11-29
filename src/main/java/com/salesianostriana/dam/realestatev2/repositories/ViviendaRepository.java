@@ -26,4 +26,6 @@ public interface ViviendaRepository extends JpaRepository<Vivienda, UUID>, JpaSp
             """, nativeQuery = true)
     public List<Vivienda> topViviendas();
 
+
+
 }

@@ -268,4 +268,6 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         v.setPropietario(user);
         return this.save(v);
     }
+
+
 }

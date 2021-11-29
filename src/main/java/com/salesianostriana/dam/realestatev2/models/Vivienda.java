@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-
+import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 //@NamedEntityGraph(
-//        name = "vivienda-interesa",
+//        name = "vivienda-propietario",
 //        attributeNodes = {
-//                @NamedAttributeNode("intereses"),
+//                @NamedAttributeNode("propietario"),
 //                @NamedAttributeNode("interesado")
 //        }
 //)
@@ -32,7 +32,7 @@ public class Vivienda implements Serializable {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator",
             parameters = {
-                    @org.hibernate.annotations.Parameter(
+                    @Parameter(
                             name = "uuid_gen_strategy_class",
                             value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
                     )
