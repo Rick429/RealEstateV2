@@ -105,5 +105,10 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().build();
         else
             return ResponseEntity.ok(this.login(userDtoConverter.createUserDtoToLoginDto(newUser)));
+            // TODO No sé si te has fijado en la estructura de la respuesta de esto, pero realmente no es correcta.
+            // Un método de controlador, asociado a una ruta, no se puede invocar desde otro método de controlador
+            // de esta forma. Tendrías que haber sacado la lógica del login a un método privado, que no tuviera
+            // anotación @PostMapping, y haber usado ese método tanto en el login como aquí.
+            // Fíjate bien en lo que está devolviendo POSTMAN y seguro que lo entiendes.
     }
 }
