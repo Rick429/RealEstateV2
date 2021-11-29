@@ -17,7 +17,12 @@ import java.util.UUID;
 //                @NamedAttributeNode("interesado")
 //        }
 //)
-
+@NamedEntityGraph(
+        name = "viviendas-propietario",
+        attributeNodes = {
+                @NamedAttributeNode("propietario")
+        }
+)
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

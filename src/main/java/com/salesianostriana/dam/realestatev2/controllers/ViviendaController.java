@@ -343,7 +343,7 @@ public class ViviendaController {
     @GetMapping("/user")
     public ResponseEntity <List<GetViviendaBasicaDto>> viviendaUserLogged(@AuthenticationPrincipal UserEntity user) {
 
-            List<Vivienda> listaViviendas = userEntityService.findViviendaById(user.getId());
+            List<Vivienda> listaViviendas = service.findViviendaByPropietario(user);
             if(listaViviendas.isEmpty()) {
                 return ResponseEntity
                         .notFound()
@@ -354,6 +354,14 @@ public class ViviendaController {
                         .body(listaViviendas.stream().map(dtoConverter::viviendaToGetViviendaBasicaDto).collect(Collectors.toList()));
             }
 
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity <List<GetViviendaInteresa>> findAllViviendas (@AuthenticationPrincipal UserEntity user) {
+
+        List<GetViviendaInteresa> listaViviendas = service.viviendasConInteres(user);
+
+        return ResponseEntity.ok().body(listaViviendas);
     }
 
 

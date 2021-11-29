@@ -43,7 +43,7 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, UUID> {
 //            where u.id = :id
 //            """)
 //    @Query("select viviendas from user_entity u where u.id = :id")
-    @EntityGraph("propietario-viviendas")
-    public List<Vivienda> findViviendaById (@Param("id") UUID id);
+//    @EntityGraph("propietario-viviendas")
+//    public List<Vivienda> findViviendasByEmail (@Param("email") String email);
 
 }

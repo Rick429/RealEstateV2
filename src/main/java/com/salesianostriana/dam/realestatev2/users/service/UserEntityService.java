@@ -76,5 +76,5 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
 
 //    public UserEntity findGestor (UUID id) {return repositorio.findGestor(id);};
 
-    public List<Vivienda> findViviendaById (UUID id) { return repositorio.findViviendaById(id);}
+//    public List<Vivienda> findViviendasByemail (String email) { return repositorio.findViviendasByEmail(email);}
 }
