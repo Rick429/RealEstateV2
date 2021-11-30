@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.realestatev2.users.service;
 
 import com.salesianostriana.dam.realestatev2.models.Inmobiliaria;
+import com.salesianostriana.dam.realestatev2.models.Vivienda;
 import com.salesianostriana.dam.realestatev2.services.base.BaseService;
 import com.salesianostriana.dam.realestatev2.users.dto.CreateUserDto;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
@@ -74,4 +75,6 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
     public List<UserEntity> findUserByRole(UserRole userRole) { return repositorio.findUserByRole(userRole);}
 
 //    public UserEntity findGestor (UUID id) {return repositorio.findGestor(id);};
+
+//    public List<Vivienda> findViviendasByemail (String email) { return repositorio.findViviendasByEmail(email);}
 }

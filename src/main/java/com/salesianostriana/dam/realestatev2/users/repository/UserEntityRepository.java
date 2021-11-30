@@ -1,8 +1,10 @@
 package com.salesianostriana.dam.realestatev2.users.repository;
 
 
+import com.salesianostriana.dam.realestatev2.models.Vivienda;
 import com.salesianostriana.dam.realestatev2.users.model.UserEntity;
 import com.salesianostriana.dam.realestatev2.users.model.UserRole;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,5 +36,14 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, UUID> {
 //            where u.inmobiliaria_id IN (:id)
 //            """)
 //    public UserEntity findGestor (@Param("id") UUID id);
+
+
+//    @Query(value = """
+//            select viviendas from user_entity u
+//            where u.id = :id
+//            """)
+//    @Query("select viviendas from user_entity u where u.id = :id")
+//    @EntityGraph("propietario-viviendas")
+//    public List<Vivienda> findViviendasByEmail (@Param("email") String email);
 
 }

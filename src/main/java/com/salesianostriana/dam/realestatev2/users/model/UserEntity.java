@@ -21,6 +21,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+@NamedEntityGraph(
+        name = "propietario-viviendas",
+        attributeNodes = {
+                @NamedAttributeNode("viviendas")
+        }
+)
 @Entity
 @Table(name="users")
 @EntityListeners(AuditingEntityListener.class)

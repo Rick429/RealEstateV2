@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Log
 @CrossOrigin(origins = "http://localhost:4200")
@@ -337,5 +339,30 @@ public class ViviendaController {
                     .ok().body(viviendasDTO);
         }
     }
+
+    @GetMapping("/user")
+    public ResponseEntity <List<GetViviendaBasicaDto>> viviendaUserLogged(@AuthenticationPrincipal UserEntity user) {
+
+            List<Vivienda> listaViviendas = service.findViviendaByPropietario(user);
+            if(listaViviendas.isEmpty()) {
+                return ResponseEntity
+                        .notFound()
+                        .build();
+            } else {
+                return ResponseEntity
+                        .ok()
+                        .body(listaViviendas.stream().map(dtoConverter::viviendaToGetViviendaBasicaDto).collect(Collectors.toList()));
+            }
+
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity <List<GetViviendaInteresa>> findAllViviendas (@AuthenticationPrincipal UserEntity user) {
+
+        List<GetViviendaInteresa> listaViviendas = service.viviendasConInteres(user.getId());
+
+        return ResponseEntity.ok().body(listaViviendas);
+    }
+
 
 }

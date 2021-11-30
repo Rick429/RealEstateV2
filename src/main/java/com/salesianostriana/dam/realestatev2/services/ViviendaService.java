@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.realestatev2.services;
 
 import com.salesianostriana.dam.realestatev2.dto.CreateViviendaDto;
+import com.salesianostriana.dam.realestatev2.dto.GetViviendaInteresa;
 import com.salesianostriana.dam.realestatev2.dto.ViviendaDtoConverter;
 import com.salesianostriana.dam.realestatev2.models.*;
 import com.salesianostriana.dam.realestatev2.repositories.ViviendaRepository;
@@ -36,9 +37,13 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         return repositorio.findAll(spec);
     }
 
+    public List<Vivienda> findViviendaByPropietario(UserEntity propietario){ return repositorio.findViviendaByPropietario(propietario);}
+
     public List<Vivienda> top3Viviendas() {
         return repositorio.topViviendas();
     }
+
+    public List<GetViviendaInteresa> viviendasConInteres(UUID id) {return repositorio.viviendasConInteres(id);}
 
     public Page<Vivienda> findByArgs(final Optional<String> titulo,
                                      final Optional<String> provincia,
@@ -268,4 +273,6 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         v.setPropietario(user);
         return this.save(v);
     }
+
+
 }
