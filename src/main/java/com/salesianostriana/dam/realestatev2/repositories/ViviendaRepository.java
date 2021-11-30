@@ -31,24 +31,17 @@ public interface ViviendaRepository extends JpaRepository<Vivienda, UUID>, JpaSp
 
     @EntityGraph("viviendas-propietario")
     public List<Vivienda> findViviendaByPropietario(UserEntity propietario);
-
-//    @Query(value = """
-//            select new com.salesianostriana.dam.realestatev2.dto.GetViviendaInteresa(
-//                v.id, v.titulo, v.direccion, v.precio, v.tipo, v.estado, v.inmobiliaria, v.meInteresa
-//             )from vivienda v LEFT JOIN v.inmobiliaria i LEFT JOIN v.interesa in
-//            where v.propietario in
-//            (select *
-//            from users u join interesa i
-//            on u.id = i.propietario_id
-//            group by u.id)
-//            """)
+    
     @Query(value = """
             select new com.salesianostriana.dam.realestatev2.dto.GetViviendaInteresa(
-                v.id, v.titulo, v.direccion, v.precio, v.tipo, v.estado
-             )from Vivienda v join fetch Interesa i
-             where v = i.vivienda and i.interesado = :id
+                v.id, v.titulo, v.direccion, v.precio, v.tipo, v.estado,
+                (CASE
+                WHEN (select count(*) from Interesa i where i.vivienda.id = v.id and i.interesado.id= :id)=1 THEN TRUE
+                WHEN (select count(*) from Interesa i where i.vivienda.id = v.id and i.interesado.id= :id)=0 THEN FALSE
+                END
+                ) )from Vivienda v
             """)
-    public List<GetViviendaInteresa> viviendasConInteres(@Param("id") UserEntity id);
+    public List<GetViviendaInteresa> viviendasConInteres(@Param("id") UUID id);
 
 
 }

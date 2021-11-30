@@ -17,5 +17,5 @@ public class GetViviendaInteresa {
     private double precio;
     private Tipo tipo;
     private Estado estado;
-    //private boolean meInteresa;
+    private boolean meInteresa;
 }

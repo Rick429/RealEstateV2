@@ -43,7 +43,7 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         return repositorio.topViviendas();
     }
 
-    public List<GetViviendaInteresa> viviendasConInteres(UserEntity id) {return repositorio.viviendasConInteres(id);}
+    public List<GetViviendaInteresa> viviendasConInteres(UUID id) {return repositorio.viviendasConInteres(id);}
 
     public Page<Vivienda> findByArgs(final Optional<String> titulo,
                                      final Optional<String> provincia,

@@ -359,7 +359,7 @@ public class ViviendaController {
     @GetMapping("/all")
     public ResponseEntity <List<GetViviendaInteresa>> findAllViviendas (@AuthenticationPrincipal UserEntity user) {
 
-        List<GetViviendaInteresa> listaViviendas = service.viviendasConInteres(user);
+        List<GetViviendaInteresa> listaViviendas = service.viviendasConInteres(user.getId());
 
         return ResponseEntity.ok().body(listaViviendas);
     }
